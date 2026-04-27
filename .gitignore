@@ -1,0 +1,26 @@
+# Python
+**/__pycache__/
+*.py[cod]
+*$py.class
+**/venv/
+.env
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Project specific
+**/logs/
+**/uploads/
+**/models/
+backend/face_attendance_system.egg-info/
+backend/insightface-0.7.3-cp311-cp311-win_amd64*.whl
+
+# OS / IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Frontend
+frontend/node_modules/
+frontend/package-lock.json

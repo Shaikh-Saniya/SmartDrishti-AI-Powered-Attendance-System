@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Attendance — Drishti</title>
+  <meta name="description" content="Edit attendance records — update status or delete entries." />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <!-- Ambient Glows -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-right"></div>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15"/><circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="16" cy="12" r="2" fill="currentColor"/></svg>
+      Drishti
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="manage-students.html">Students</a>
+      <a href="view-attendance.html" class="active">Attendance</a>
+      <a href="#" data-action="logout">Logout</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+
+  <!-- ═══════════ PAGE CONTENT ═══════════ -->
+  <div class="page-wrapper">
+    <div class="page-content">
+      <div class="container">
+
+        <!-- Header -->
+        <div class="flex-between fade-in-up" style="margin-bottom: 24px;">
+          <div class="section-header" style="margin-bottom: 0;">
+            <h2>Edit Attendance</h2>
+            <p>Modify attendance status for individual records.</p>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <a href="view-attendance.html" class="btn btn-ghost btn-sm">← Back to View</a>
+            <button class="btn btn-primary btn-sm" id="save-all-btn" onclick="saveAllChanges()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 14 2 2 4-4"/><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              Save All Changes
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-row fade-in-up stagger-1">
+          <div class="filter-group">
+            <label>Date</label>
+            <input class="form-input" type="date" id="edit-filter-date" onchange="loadEditAttendance()" />
+          </div>
+          <div class="filter-group">
+            <label>Subject</label>
+            <select class="form-select" id="edit-filter-subject" onchange="loadEditAttendance()">
+              <option value="">All Subjects</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="Physics">Physics</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Data Structures">Data Structures</option>
+              <option value="DBMS">DBMS</option>
+              <option value="Operating Systems">Operating Systems</option>
+              <option value="Machine Learning">Machine Learning</option>
+            </select>
+          </div>
+          <div class="filter-group" style="flex: 0 0 auto;">
+            <label>&nbsp;</label>
+            <button class="btn btn-ghost btn-sm" onclick="clearEditFilters()">Clear</button>
+          </div>
+        </div>
+
+        <!-- Editable Table -->
+        <div class="table-wrapper fade-in-up stagger-2" id="edit-table-wrapper">
+          <table class="data-table" id="edit-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Student Name</th>
+                <th>Roll Number</th>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th style="text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="edit-tbody">
+              <!-- Loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="edit-empty-state" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+          <h3>No Records to Edit</h3>
+          <p>Select a date and subject to load attendance records for editing.</p>
+        </div>
+
+        <!-- Change summary -->
+        <div class="card" id="changes-summary" style="margin-top: 24px; padding: 20px; display: none;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="color: var(--warning); font-size: 1.2rem;">⚠</span>
+            <span id="changes-count" style="font-size: 0.9rem;">0 unsaved changes</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script src="scripts/api.js"></script>
+  <script src="scripts/main.js"></script>
+  <script>
+    if (!requireAuth()) { /* redirect */ }
+
+    // Set today's date
+    document.getElementById('edit-filter-date').valueAsDate = new Date();
+
+    let pendingChanges = {};  // { recordId: { status } }
+
+    loadEditAttendance();
+
+    async function loadEditAttendance(page = 1) {
+      const tbody = document.getElementById('edit-tbody');
+      const emptyState = document.getElementById('edit-empty-state');
+      const tableWrapper = document.getElementById('edit-table-wrapper');
+
+      tbody.innerHTML = `
+        <tr><td colspan="7" style="text-align:center;padding:40px;">
+          <div class="spinner" style="margin:0 auto;"></div>
+          <p class="text-muted" style="margin-top:12px;font-size:0.85rem;">Loading records...</p>
+        </td></tr>
+      `;
+
+      const filters = {
+        date: document.getElementById('edit-filter-date').value || undefined,
+        subject: document.getElementById('edit-filter-subject').value || undefined,
+      };
+
+      try {
+        const data = await AttendanceAPI.list(page, 100, filters);
+        const items = data.items || [];
+
+        if (items.length === 0) {
+          tableWrapper.style.display = 'none';
+          emptyState.style.display = 'block';
+          return;
+        }
+
+        tableWrapper.style.display = '';
+        emptyState.style.display = 'none';
+        pendingChanges = {};
+        updateChangesCount();
+
+        tbody.innerHTML = items.map((item, i) => `
+          <tr id="row-${item.id}" data-id="${item.id}" data-original-status="${item.status}">
+            <td style="color:var(--platinum-muted)">${i + 1}</td>
+            <td><strong>${item.student_name || '—'}</strong></td>
+            <td><code style="color:var(--chamoisee);font-size:0.82rem;">${item.roll_number || '—'}</code></td>
+            <td>${item.subject || '—'}</td>
+            <td>${formatDate(item.date)}</td>
+            <td>
+              <select class="form-select" style="padding:8px 12px;font-size:0.82rem;min-width:120px;" 
+                      onchange="markChanged('${item.id}', this.value, '${item.status}')">
+                <option value="present" ${item.status === 'present' ? 'selected' : ''}>✓ Present</option>
+                <option value="absent" ${item.status === 'absent' ? 'selected' : ''}>✕ Absent</option>
+                <option value="late" ${item.status === 'late' ? 'selected' : ''}>⏱ Late</option>
+              </select>
+            </td>
+            <td style="text-align: center;">
+              <button class="btn btn-ghost btn-sm" style="color: var(--danger);" onclick="deleteRecord('${item.id}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--danger);">Failed to load: ${err.message}</td></tr>`;
+      }
+    }
+
+    function markChanged(recordId, newStatus, originalStatus) {
+      const row = document.getElementById(`row-${recordId}`);
+      if (newStatus !== originalStatus) {
+        pendingChanges[recordId] = { status: newStatus };
+        row.style.background = 'rgba(126, 172, 181, 0.12)';
+      } else {
+        delete pendingChanges[recordId];
+        row.style.background = '';
+      }
+      updateChangesCount();
+    }
+
+    function updateChangesCount() {
+      const count = Object.keys(pendingChanges).length;
+      const summary = document.getElementById('changes-summary');
+      const countEl = document.getElementById('changes-count');
+
+      if (count > 0) {
+        summary.style.display = 'block';
+        countEl.textContent = `${count} unsaved change${count > 1 ? 's' : ''}`;
+      } else {
+        summary.style.display = 'none';
+      }
+    }
+
+    async function saveAllChanges() {
+      const changes = Object.entries(pendingChanges);
+      if (changes.length === 0) {
+        showToast('No changes to save', 'info');
+        return;
+      }
+
+      showLoading(`Saving ${changes.length} change(s)...`);
+
+      let saved = 0;
+      let failed = 0;
+
+      for (const [id, data] of changes) {
+        try {
+          await AttendanceAPI.update(id, data);
+          saved++;
+        } catch (err) {
+          console.error(`Failed to update ${id}:`, err);
+          failed++;
+        }
+      }
+
+      hideLoading();
+
+      if (failed === 0) {
+        showToast(`${saved} record(s) updated successfully!`, 'success');
+        pendingChanges = {};
+        updateChangesCount();
+        loadEditAttendance();
+      } else {
+        showToast(`${saved} saved, ${failed} failed`, 'warning');
+      }
+    }
+
+    function deleteRecord(recordId) {
+      confirmAction('This will permanently delete this attendance record.', async () => {
+        try {
+          await AttendanceAPI.delete(recordId);
+          showToast('Record deleted', 'success');
+          loadEditAttendance();
+        } catch (err) {
+          showToast(err.message || 'Delete failed', 'error');
+        }
+      });
+    }
+
+    function clearEditFilters() {
+      document.getElementById('edit-filter-date').value = '';
+      document.getElementById('edit-filter-subject').value = '';
+      loadEditAttendance();
+    }
+  </script>
+</body>
+</html>

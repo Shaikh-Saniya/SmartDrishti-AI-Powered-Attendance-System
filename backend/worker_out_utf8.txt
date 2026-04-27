@@ -1,0 +1,168 @@
+﻿Testing ML directly...
+2026-04-15 00:20:01,056 INFO sqlalchemy.engine.Engine select pg_catalog.version()
+.\venv\Scripts\python : INF
+O:sqlalchemy.engine.Engine:
+select pg_catalog.version()
+At line:1 char:1
++ .\venv\Scripts\python 
+test_worker.py > 
+worker_out.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (INF  
+  O:sqlalchemy...talog.v   
+ ersion():String) [], R    
+emoteException
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+INFO:sqlalchemy.engine.Engi
+ne:[raw sql] ()
+2026-04-15 00:20:01,056 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-04-15 00:20:01,067 INFO sqlalchemy.engine.Engine select current_schema()
+INFO:sqlalchemy.engine.Engi
+ne:select current_schema()
+2026-04-15 00:20:01,067 INFO sqlalchemy.engine.Engine [raw sql] ()
+INFO:sqlalchemy.engine.Engi
+ne:[raw sql] ()
+2026-04-15 00:20:01,082 INFO sqlalchemy.engine.Engine show standard_conforming_strings
+INFO:sqlalchemy.engine.Engi
+ne:show 
+standard_conforming_strings
+2026-04-15 00:20:01,082 INFO sqlalchemy.engine.Engine [raw sql] ()
+INFO:sqlalchemy.engine.Engi
+ne:[raw sql] ()
+2026-04-15 00:20:01,091 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+INFO:sqlalchemy.engine.Engi
+ne:BEGIN (implicit)
+2026-04-15 00:20:01,091 INFO sqlalchemy.engine.Engine INSERT INTO processing_tasks (task_type, status, error_message, id, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::UUID, $5::TIMESTAMP WITH TIME ZONE, $6::TIMESTAMP WITH TIME ZONE)
+INFO:sqlalchemy.engine.Engi
+ne:INSERT INTO 
+processing_tasks 
+(task_type, status, 
+error_message, id, 
+created_at, updated_at) 
+VALUES ($1::VARCHAR, 
+$2::VARCHAR, $3::VARCHAR, 
+$4::UUID, $5::TIMESTAMP 
+WITH TIME ZONE, 
+$6::TIMESTAMP WITH TIME 
+ZONE)
+2026-04-15 00:20:01,091 INFO sqlalchemy.engine.Engine [generated in 0.00054s] ('group_attendance', 'pending', None, UUID('8e7fd518-08fd-48e4-b0d0-bb6b017202cc'), datetime.datetime(2026, 4, 14, 18, 50, 1, 91389, tzinfo=datetime.timezone.utc), datetime.datetime(2026, 4, 14, 18, 50, 1, 91389, tzinfo=datetime.timezone.utc))
+INFO:sqlalchemy.engine.Engi
+ne:[generated in 0.00054s] 
+('group_attendance', 
+'pending', None, UUID('8e7f
+d518-08fd-48e4-b0d0-bb6b017
+202cc'), 
+datetime.datetime(2026, 4, 
+14, 18, 50, 1, 91389, tzinf
+o=datetime.timezone.utc), 
+datetime.datetime(2026, 4, 
+14, 18, 50, 1, 91389, tzinf
+o=datetime.timezone.utc))
+2026-04-15 00:20:01,100 INFO sqlalchemy.engine.Engine COMMIT
+INFO:sqlalchemy.engine.Engi
+ne:COMMIT
+INFO:sqlalchemy.engine.Engi
+ne:BEGIN (implicit)
+Task inserted in DB. Running process_group_image...
+2026-04-15 00:20:01,121 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-04-15 00:20:01,182 INFO sqlalchemy.engine.Engine UPDATE processing_tasks SET status=$1::VARCHAR, updated_at=$2::TIMESTAMP WITH TIME ZONE WHERE processing_tasks.id = $3::UUID
+INFO:sqlalchemy.engine.Engi
+ne:UPDATE processing_tasks 
+SET status=$1::VARCHAR, 
+updated_at=$2::TIMESTAMP 
+WITH TIME ZONE WHERE 
+processing_tasks.id = 
+$3::UUID
+2026-04-15 00:20:01,182 INFO sqlalchemy.engine.Engine [generated in 0.00054s] ('processing', datetime.datetime(2026, 4, 14, 18, 50, 1, 182653, tzinfo=datetime.timezone.utc), UUID('8e7fd518-08fd-48e4-b0d0-bb6b017202cc'))
+INFO:sqlalchemy.engine.Engi
+ne:[generated in 0.00054s] 
+('processing', 
+datetime.datetime(2026, 4, 
+14, 18, 50, 1, 182653, tzin
+fo=datetime.timezone.utc), 
+UUID('8e7fd518-08fd-48e4-b0
+d0-bb6b017202cc'))
+2026-04-15 00:20:01,195 INFO sqlalchemy.engine.Engine COMMIT
+INFO:sqlalchemy.engine.Engi
+ne:COMMIT
+ERROR:app.services.face_ser
+vice:Task 8e7fd518-08fd-48e
+4-b0d0-bb6b017202cc 
+failed: FaceAnalysis model 
+has not been loaded. Call 
+load_model() first.
+2026-04-15 00:20:01,211 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+INFO:sqlalchemy.engine.Engi
+ne:BEGIN (implicit)
+2026-04-15 00:20:01,213 INFO sqlalchemy.engine.Engine UPDATE processing_tasks SET status=$1::VARCHAR, error_message=$2::VARCHAR, updated_at=$3::TIMESTAMP WITH TIME ZONE WHERE processing_tasks.id = $4::UUID
+INFO:sqlalchemy.engine.Engi
+ne:UPDATE processing_tasks 
+SET status=$1::VARCHAR, 
+error_message=$2::VARCHAR, 
+updated_at=$3::TIMESTAMP 
+WITH TIME ZONE WHERE 
+processing_tasks.id = 
+$4::UUID
+2026-04-15 00:20:01,213 INFO sqlalchemy.engine.Engine [generated in 0.00049s] ('failed', 'FaceAnalysis model has not been loaded. Call load_model() first.', datetime.datetime(2026, 4, 14, 18, 50, 1, 213087, tzinfo=datetime.timezone.utc), UUID('8e7fd518-08fd-48e4-b0d0-bb6b017202cc'))
+INFO:sqlalchemy.engine.Engi
+ne:[generated in 0.00049s] 
+('failed', 'FaceAnalysis 
+model has not been loaded. 
+Call load_model() first.', 
+datetime.datetime(2026, 4, 
+14, 18, 50, 1, 213087, tzin
+fo=datetime.timezone.utc), 
+UUID('8e7fd518-08fd-48e4-b0
+d0-bb6b017202cc'))
+2026-04-15 00:20:01,222 INFO sqlalchemy.engine.Engine COMMIT
+INFO:sqlalchemy.engine.Engi
+ne:COMMIT
+INFO:app.services.face_serv
+ice:Task 8e7fd518-08fd-48e4
+-b0d0-bb6b017202cc updated 
+to 'failed'
+INFO:sqlalchemy.engine.Engi
+ne:BEGIN (implicit)
+Done. Checking DB status...
+2026-04-15 00:20:01,237 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-04-15 00:20:01,243 INFO sqlalchemy.engine.Engine SELECT processing_tasks.task_type AS processing_tasks_task_type, processing_tasks.status AS processing_tasks_status, processing_tasks.result AS processing_tasks_result, processing_tasks.error_message AS processing_tasks_error_message, processing_tasks.id AS processing_tasks_id, processing_tasks.created_at AS processing_tasks_created_at, processing_tasks.updated_at AS processing_tasks_updated_at 
+FROM processing_tasks 
+WHERE processing_tasks.id = $1::UUID
+INFO:sqlalchemy.engine.Engi
+ne:SELECT 
+processing_tasks.task_type 
+AS processing_tasks_task_ty
+pe, 
+processing_tasks.status AS 
+processing_tasks_status, 
+processing_tasks.result AS 
+processing_tasks_result, pr
+ocessing_tasks.error_messag
+e AS processing_tasks_error
+_message, 
+processing_tasks.id AS 
+processing_tasks_id, proces
+sing_tasks.created_at AS pr
+ocessing_tasks_created_at, 
+processing_tasks.updated_at
+ AS processing_tasks_update
+d_at 
+FROM processing_tasks 
+WHERE processing_tasks.id 
+= $1::UUID
+2026-04-15 00:20:01,243 INFO sqlalchemy.engine.Engine [generated in 0.00077s] (UUID('8e7fd518-08fd-48e4-b0d0-bb6b017202cc'),)
+INFO:sqlalchemy.engine.Engi
+ne:[generated in 0.00077s] 
+(UUID('8e7fd518-08fd-48e4-b
+0d0-bb6b017202cc'),)
+Final DB Status: failed
+Final DB Result: None
+Final DB Error: FaceAnalysis model has not been loaded. Call load_model() first.
+2026-04-15 00:20:01,254 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:sqlalchemy.engine.Engi
+ne:ROLLBACK

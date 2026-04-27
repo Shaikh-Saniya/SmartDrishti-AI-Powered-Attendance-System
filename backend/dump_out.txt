@@ -1,0 +1,6 @@
+Task 7caf6e05-1bc1-4a8b-bc10-63121c3df3e5: type=group_attendance, status=pending
+Task 14861362-492c-4ce6-9f6d-c82a7587fbf2: type=group_attendance, status=failed
+Task 8e7fd518-08fd-48e4-b0d0-bb6b017202cc: type=group_attendance, status=failed
+Task 8d74c8eb-0cff-43c4-a5de-7439ee1028a0: type=group_attendance, status=pending
+Task bb6ad179-8a03-4fc1-9207-8162d4432ce8: type=group_attendance, status=pending
+Task 50424ae8-4d39-45f2-a753-3e6ec40d0999: type=group_attendance, status=pending

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drishti — Face Clustering Attendance System</title>
+  <meta name="description" content="Drishti is an AI-powered face clustering attendance system that automates classroom attendance using advanced facial recognition technology." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/landing.css" />
+</head>
+<body>
+  <!-- Ambient Glows -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-right"></div>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar transparent" data-transparent="true">
+    <a href="index.html" class="nav-brand" id="nav-brand">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15"/>
+        <circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="16" cy="12" r="2" fill="currentColor"/>
+      </svg>
+      Drishti
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="#hero">Home</a>
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+      <a href="login.html" class="btn btn-ghost btn-sm">Login</a>
+      <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+
+  <!-- ═══════════ HERO SECTION ═══════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+        Smart Attendance
+      </div>
+      <h1 class="hero-title">
+        Face Clustering<br />
+        <span class="highlight">Attendance System</span>
+      </h1>
+      <p class="hero-description">
+        Automate your classroom attendance with advanced facial recognition.
+        Upload a group photo and let AI identify each student — instantly, accurately, effortlessly.
+      </p>
+      <div class="hero-buttons">
+        <a href="login.html" class="btn btn-primary btn-lg">Get Started</a>
+        <a href="#about" class="btn btn-secondary btn-lg">Learn More</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+      <span>Scroll</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+  </section>
+
+
+  <!-- ═══════════ FEATURES SECTION ═══════════ -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header text-center animate-on-scroll">
+        <h2>Why <span class="text-accent">Drishti</span>?</h2>
+        <p>Our system combines cutting-edge ML with an intuitive interface to streamline attendance.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card animate-on-scroll stagger-1">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3 class="feature-title">AI Face Recognition</h3>
+          <p class="feature-description">Uses high-quality face embeddings for accurate recognition across classroom images, running efficiently on CPU.</p>
+        </div>
+
+        <div class="feature-card animate-on-scroll stagger-2">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+          </div>
+          <h3 class="feature-title">Instant Processing</h3>
+          <p class="feature-description">Upload a group photo and get attendance results within seconds. Background processing keeps the UI responsive.</p>
+        </div>
+
+        <div class="feature-card animate-on-scroll stagger-3">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+          </div>
+          <h3 class="feature-title">Secure & Private</h3>
+          <p class="feature-description">JWT authentication, role-based access, and encrypted embedding storage ensure data privacy and security.</p>
+        </div>
+
+        <div class="feature-card animate-on-scroll stagger-4">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          </div>
+          <h3 class="feature-title">Export Reports</h3>
+          <p class="feature-description">Export attendance records as CSV or Excel files with customizable date and subject filters.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════ ABOUT SECTION ═══════════ -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text animate-on-scroll">
+          <h2>About the <span class="text-accent">Project</span></h2>
+          <p>
+            Drishti (दृष्टि — meaning "vision") is an intelligent attendance management system designed for
+            educational institutions. It leverages state-of-the-art face recognition technology to automate
+            the tedious process of manual attendance marking.
+          </p>
+          <p>
+            Built with FastAPI, PostgreSQL with pgvector, and robust face matching, the system can detect
+            and match multiple faces in a single group photograph, making it ideal for classrooms.
+          </p>
+
+          <div class="about-stats">
+            <div class="stat-card">
+              <div class="stat-value">512</div>
+              <div class="stat-label">Dim Embeddings</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">99%+</div>
+              <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">&lt;2s</div>
+              <div class="stat-label">Processing Time</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">CPU</div>
+              <div class="stat-label">Only Mode</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-visual animate-on-scroll">
+          <div class="about-visual-card">
+            <h4 style="margin-bottom: 20px; text-align: center;" class="text-accent">How It Works</h4>
+            <div class="flow-steps">
+              <div class="flow-step">
+                <div class="flow-step-number">1</div>
+                <div class="flow-step-text">Register students with face images</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-number">2</div>
+                <div class="flow-step-text">Upload a group classroom photo</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-number">3</div>
+                <div class="flow-step-text">AI detects and identifies each face</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-number">4</div>
+                <div class="flow-step-text">Attendance is auto-marked instantly</div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-number">5</div>
+                <div class="flow-step-text">Review, edit, or export records</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="landing-footer">
+    <div class="container">
+      <p>&copy; 2026 <a href="#">Drishti</a> — Face Clustering Attendance System. All rights reserved.</p>
+    </div>
+  </footer>
+
+
+  <script src="scripts/api.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>

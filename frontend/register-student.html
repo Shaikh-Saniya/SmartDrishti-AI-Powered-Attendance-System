@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Student — Drishti</title>
+  <meta name="description" content="Register a new student with face image for the attendance system." />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+
+<body>
+  <!-- Ambient Glows -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-right"></div>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <svg viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15" />
+        <circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none" />
+        <path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" />
+        <circle cx="16" cy="12" r="2" fill="currentColor" />
+      </svg>
+      Drishti
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="manage-students.html" class="active">Students</a>
+      <a href="view-attendance.html">Attendance</a>
+      <a href="#" data-action="logout">Logout</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+
+  <!-- ═══════════ PAGE CONTENT ═══════════ -->
+  <div class="page-wrapper">
+    <div class="page-content">
+      <div class="container container-sm">
+
+        <div class="section-header fade-in-up">
+          <h2>Register New Student</h2>
+          <p>Add a student to the system with their details and face image for recognition.</p>
+        </div>
+
+        <div class="card fade-in-up" style="padding: 36px;">
+          <form id="register-form">
+
+            <div class="grid-2" style="gap: 20px;">
+              <div class="form-group">
+                <label class="form-label" for="name">Full Name *</label>
+                <input class="form-input" type="text" id="name" placeholder="Enter Your Name:" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="roll_number">Roll Number *</label>
+                <input class="form-input" type="text" id="roll_number" placeholder="Enter Your Roll No.:" required />
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap: 20px;">
+              <div class="form-group">
+                <label class="form-label" for="class_name">Class *</label>
+                <select class="form-select" id="class_name" required>
+                  <option value="">Select Class</option>
+                  <option value="CSE-A">CSE-A</option>
+                  <option value="CSE-B">CSE-B</option>
+                  <option value="CSE-C">CSE-C</option>
+                  <option value="ECE-A">ECE-A</option>
+                  <option value="ECE-B">ECE-B</option>
+                  <option value="ME-A">ME-A</option>
+                  <option value="CE-A">CE-A</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="department">Department</label>
+                <input class="form-input" type="text" id="department" placeholder="Enter Department:" />
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap: 20px;">
+              <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-input" type="email" id="email" placeholder="Enter College Email:" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone</label>
+                <input class="form-input" type="tel" id="phone" placeholder="Enter Phone Number:" />
+              </div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="form-group">
+              <label class="form-label">Face Image *</label>
+              <div class="file-upload-area" id="upload-area">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" x2="12" y1="3" y2="15" />
+                </svg>
+                <p>Drag and drop an image here, or <span class="browse-text">browse</span></p>
+                <input type="file" id="student-image" accept="image/jpeg,image/png,image/jpg" hidden />
+              </div>
+              <p class="form-hint">Upload a clear, front-facing photo. Supported: JPG, PNG (max 10 MB)</p>
+              <div style="display: flex; justify-content: center;">
+                <img id="image-preview" class="image-preview" alt="Preview" />
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
+              <a href="dashboard.html" class="btn btn-ghost">Cancel</a>
+              <button type="submit" class="btn btn-primary btn-lg" id="register-btn">
+                Register Student
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script src="scripts/api.js"></script>
+  <script src="scripts/main.js"></script>
+  <script>
+    if (!requireAuth()) { /* redirect */ }
+
+    // File upload setup
+    initFileUpload('upload-area', 'student-image', 'image-preview');
+
+    // Form submit
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('register-btn');
+
+      const name = document.getElementById('name').value.trim();
+      const roll_number = document.getElementById('roll_number').value.trim();
+      const class_name = document.getElementById('class_name').value.trim();
+      const department = document.getElementById('department').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const imageInput = document.getElementById('student-image');
+
+      if (!imageInput.files.length) {
+        showToast('Please upload a face image', 'warning');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Registering...';
+      showLoading('Registering student and processing face...');
+
+      try {
+        // Consolidated Step: Create student and upload photo in one request
+        await StudentAPI.create({
+          name,
+          roll_number,
+          class_name,
+          department: department || null,
+          email: email || null,
+          phone: phone || null,
+        }, imageInput.files[0]);
+
+        hideLoading();
+        showToast('Student registered successfully!', 'success');
+        setTimeout(() => window.location.href = 'manage-students.html', 1000);
+      } catch (err) {
+        hideLoading();
+        showToast(err.message || 'Registration failed', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Register Student';
+      }
+    });
+  </script>
+</body>
+
+</html>

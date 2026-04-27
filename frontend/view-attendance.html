@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Attendance — Drishti</title>
+  <meta name="description" content="View, edit and export attendance records grouped by class." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    /* ── Group headers ─────────────────────────────────────── */
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      margin: 28px 0 8px;
+      background: linear-gradient(90deg, rgba(126, 172, 181, 0.13) 0%, transparent 100%);
+      border-left: 3px solid var(--chamoisee, #7EACB5);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .group-header h4 {
+      margin: 0;
+      font-size: 0.93rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--chamoisee, #7EACB5);
+    }
+
+    .group-header .group-count {
+      font-size: 0.77rem;
+      color: var(--platinum-muted, #6B7280);
+      margin-left: auto;
+    }
+
+    .group-unknown .group-header {
+      background: linear-gradient(90deg, rgba(245, 228, 200, 0.12) 0%, transparent 100%);
+      border-left-color: var(--surface-hover, #F5E4C8);
+    }
+
+    .group-unknown .group-header h4 {
+      color: var(--surface-hover, #F5E4C8);
+    }
+
+    /* ── Editable cell inputs ──────────────────────────────── */
+    .edit-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid transparent;
+      color: inherit;
+      font: inherit;
+      width: 100%;
+      min-width: 80px;
+      padding: 2px 4px;
+      border-radius: 3px;
+      transition: border-color .2s, background .2s;
+    }
+
+    .edit-input:focus {
+      outline: none;
+      border-bottom-color: var(--chamoisee, #7EACB5);
+      background: rgba(126, 172, 181, 0.12);
+    }
+
+    .edit-select {
+      background: transparent;
+      border: 1px solid transparent;
+      color: inherit;
+      font: inherit;
+      padding: 2px 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+
+    .edit-select:focus {
+      outline: none;
+      border-color: var(--chamoisee, #7EACB5);
+      background: rgba(126, 172, 181, 0.12);
+    }
+
+    /* ── Save button per row ──────────────────────────────── */
+    .btn-save-row {
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      border-radius: 6px;
+      background: rgba(27, 36, 42, 0.08);
+      color: var(--platinum);
+      border: 1px solid rgba(27, 36, 42, 0.12);
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      white-space: nowrap;
+    }
+
+    .btn-save-row:hover {
+      background: rgba(126, 172, 181, 0.14);
+      transform: scale(1.03);
+    }
+
+    .btn-save-row:active {
+      transform: scale(0.97);
+    }
+
+    .btn-save-row.saving {
+      opacity: .6;
+      pointer-events: none;
+    }
+
+    .btn-save-row.saved {
+      background: rgba(74, 196, 123, 0.2);
+      color: #4ac47b;
+      border-color: rgba(74, 196, 123, 0.4);
+    }
+
+    .btn-save-row.error {
+      background: rgba(220, 53, 69, 0.15);
+      color: #dc3545;
+      border-color: rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-delete-row {
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      border-radius: 6px;
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(220, 53, 69, 0.2);
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      white-space: nowrap;
+    }
+
+    .btn-delete-row:hover {
+      background: rgba(220, 53, 69, 0.2);
+      transform: scale(1.03);
+    }
+
+    .btn-delete-row:active {
+      transform: scale(0.97);
+    }
+
+    .btn-delete-row.deleting {
+      opacity: .6;
+      pointer-events: none;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Ambient Glows -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-right"></div>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <svg viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15" />
+        <circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none" />
+        <path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" />
+        <circle cx="16" cy="12" r="2" fill="currentColor" />
+      </svg>
+      Drishti
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="manage-students.html">Students</a>
+      <a href="view-attendance.html" class="active">Attendance</a>
+      <a href="#" data-action="logout">Logout</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+
+  <!-- ═══════════ PAGE CONTENT ═══════════ -->
+  <div class="page-wrapper">
+    <div class="page-content">
+      <div class="container">
+
+        <!-- Header -->
+        <div class="flex-between fade-in-up" style="margin-bottom: 24px;">
+          <div class="section-header" style="margin-bottom: 0;">
+            <h2>Attendance Records</h2>
+            <p>All fields are editable inline. Click a cell, change value, press <strong>Save</strong>.</p>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <button class="btn btn-primary btn-sm" id="export-btn" onclick="exportAttendance()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" x2="12" y1="15" y2="3" />
+              </svg>
+              Export Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-row fade-in-up stagger-1">
+          <div class="filter-group">
+            <label>Class</label>
+            <select class="form-select" id="filter-class" onchange="loadAttendance()">
+              <option value="">All Classes</option>
+              <!-- populated dynamically from DB -->
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Date</label>
+            <input class="form-input" type="date" id="filter-date" onchange="loadAttendance()" />
+          </div>
+          <div class="filter-group">
+            <label>Subject</label>
+            <select class="form-select" id="filter-subject" onchange="loadAttendance()">
+              <option value="">All Subjects</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="Physics">Physics</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Data Structures">Data Structures</option>
+              <option value="DBMS">DBMS</option>
+              <option value="Operating Systems">Operating Systems</option>
+              <option value="Machine Learning">Machine Learning</option>
+            </select>
+          </div>
+          <div class="filter-group" style="flex: 0 0 auto;">
+            <label>&nbsp;</label>
+            <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear</button>
+          </div>
+        </div>
+
+        <!-- Results area (grouped tables injected here) -->
+        <div id="results-area" class="fade-in-up stagger-2"></div>
+
+        <!-- Pagination -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px;"
+          id="pagination-container">
+          <p class="text-muted" style="font-size:.85rem;" id="pagination-info"></p>
+          <div style="display:flex;gap:8px;" id="pagination-buttons"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state" style="display:none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+            <line x1="12" x2="12" y1="11" y2="17" />
+            <line x1="9" x2="15" y1="14" y2="14" />
+          </svg>
+          <h3>No Attendance Records</h3>
+          <p id="empty-msg">No records match your filters.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script src="scripts/api.js"></script>
+  <script src="scripts/main.js"></script>
+  <script>
+    if (!requireAuth()) { /* redirect */ }
+
+    let currentPage = 1;
+    const pageSize = 25;
+
+    // ── Populate class dropdown from DB ─────────────────────
+    async function loadClassDropdown() {
+      const sel = document.getElementById('filter-class');
+      try {
+        const classes = await AttendanceAPI.getClasses();
+        // keep "All Classes" option, then add DB values
+        sel.innerHTML = '<option value="">All Classes</option>';
+        for (const cls of classes) {
+          const opt = document.createElement('option');
+          opt.value = cls;
+          opt.textContent = cls;
+          sel.appendChild(opt);
+        }
+      } catch (e) {
+        // fallback: keep static options if API fails
+        console.warn('Could not load classes from DB, using defaults:', e.message);
+        sel.innerHTML = `
+          <option value="">All Classes</option>
+          <option value="CSE-A">CSE-A</option>
+          <option value="CSE-B">CSE-B</option>
+          <option value="CSE-C">CSE-C</option>
+          <option value="ECE-A">ECE-A</option>
+          <option value="ECE-B">ECE-B</option>
+          <option value="ME-A">ME-A</option>
+          <option value="CE-A">CE-A</option>
+          <option value="Unknown">Unknown Faces</option>
+        `;
+      }
+    }
+
+    // ── Load & render attendance ─────────────────────────────
+    async function loadAttendance(page = 1) {
+      currentPage = page;
+      const resultsArea = document.getElementById('results-area');
+      const emptyState = document.getElementById('empty-state');
+      const pagCont = document.getElementById('pagination-container');
+
+      resultsArea.innerHTML = `
+        <div style="text-align:center;padding:60px 0;">
+          <div class="spinner" style="margin:0 auto;"></div>
+          <p class="text-muted" style="margin-top:12px;font-size:.85rem;">Loading records…</p>
+        </div>`;
+      emptyState.style.display = 'none';
+      pagCont.style.display = 'none';
+
+      const classFilter = document.getElementById('filter-class').value || undefined;
+      const dateFilter = document.getElementById('filter-date').value || undefined;
+      const subjectFilter = document.getElementById('filter-subject').value || undefined;
+
+      try {
+        const data = await AttendanceAPI.list(page, pageSize, {
+          class_name: classFilter,
+          date: dateFilter,
+          subject: subjectFilter,
+        });
+        const items = data.items || [];
+        const total = data.total || 0;
+
+        if (!items.length) {
+          resultsArea.innerHTML = '';
+          emptyState.style.display = 'block';
+          document.getElementById('empty-msg').textContent =
+            classFilter
+              ? `No attendance records for class "${classFilter}".`
+              : 'No records match your filters.';
+          return;
+        }
+
+        emptyState.style.display = 'none';
+        pagCont.style.display = 'flex';
+
+        // ── Group by class_name -> date -> subject ────────────────────────────
+        const groups = {};
+        for (const item of items) {
+          const cls = item.class_name || 'Unknown';
+          const dt = item.date || 'No Date';
+          const sub = item.subject || 'Unknown Subject';
+
+          if (!groups[cls]) groups[cls] = {};
+          if (!groups[cls][dt]) groups[cls][dt] = {};
+          if (!groups[cls][dt][sub]) groups[cls][dt][sub] = [];
+
+          groups[cls][dt][sub].push(item);
+        }
+
+        const sortedClasses = Object.keys(groups).sort((a, b) => {
+          if (a === 'Unknown') return 1;
+          if (b === 'Unknown') return -1;
+          return a.localeCompare(b);
+        });
+
+        // ── Build HTML ─────────────────────────────────────
+        let html = '';
+        let rowNum = (page - 1) * pageSize + 1;
+
+        for (const cls of sortedClasses) {
+          const isUnknown = cls === 'Unknown';
+
+          // Calculate total records in this class
+          let classTotal = 0;
+          for (const dt in groups[cls]) {
+            for (const sub in groups[cls][dt]) {
+              classTotal += groups[cls][dt][sub].length;
+            }
+          }
+
+          html += `
+            <div class="group-section${isUnknown ? ' group-unknown' : ''}" style="background: rgba(152,126,93,0.06); border: 1px solid rgba(152,126,93,0.15); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 40px; box-shadow: 0 4px 16px rgba(152,126,93,0.04);">
+              <div class="group-header" style="background: linear-gradient(90deg, rgba(152,126,93,0.12) 0%, transparent 100%); border-left: 4px solid var(--chamoisee); padding: 16px 20px; border-radius: 6px; margin-top: 0;">
+                <h3 style="margin: 0; font-size: 1.15rem; color: var(--chamoisee);">${isUnknown ? '❓ Unknown Faces' : '🎓 Class: ' + cls}</h3>
+                <span class="group-count" style="margin-left: auto; font-weight: 600; font-size: 0.9rem;">${classTotal} record${classTotal !== 1 ? 's' : ''}</span>
+              </div>
+          `;
+
+          const sortedDates = Object.keys(groups[cls]).sort().reverse(); // Newest first
+
+          for (const dt of sortedDates) {
+            const sortedSubjects = Object.keys(groups[cls][dt]).sort();
+
+            for (const sub of sortedSubjects) {
+              const records = groups[cls][dt][sub];
+
+              html += `
+                <div class="subgroup-section" style="margin-left: 20px; margin-bottom: 24px;">
+                  <div class="subgroup-header" style="display: flex; align-items: center; gap: 10px; margin: 15px 0 12px 0;">
+                    <h5 style="margin: 0; font-size: 1rem; color: var(--platinum); border-left: 3px solid var(--success); padding-left: 10px;">
+                      📅 <span style="font-weight: 600;">${dt}</span> &nbsp;&nbsp;|&nbsp;&nbsp; 📚 <span style="font-weight: 600;">${sub}</span>
+                    </h5>
+                    <span style="font-size: 0.8rem; color: var(--platinum-muted); background: var(--surface-hover); padding: 3px 10px; border-radius: 12px; font-weight: 500;">${records.length}</span>
+                  </div>
+                  <div class="table-wrapper">
+                    <table class="data-table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Roll No.</th>
+                          <th>Class</th>
+                          <th>Subject</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Status</th>
+                          <th>Source</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+              `;
+
+              for (const item of records) {
+                const id = item.id;
+                html += `
+                  <tr id="row-${id}">
+                    <td style="color:var(--platinum-muted);font-size:.8rem;">${rowNum++}</td>
+
+                    <!-- Name -->
+                    <td>
+                      <input class="edit-input" id="name-${id}"
+                        value="${esc(item.name || '')}"
+                        placeholder="Name" />
+                    </td>
+
+                    <!-- Roll number -->
+                    <td>
+                      <input class="edit-input" id="roll-${id}"
+                        value="${esc(item.roll_number === 'UNKNOWN' ? '' : (item.roll_number || ''))}"
+                        placeholder="Roll no." style="min-width:70px;" />
+                    </td>
+
+                    <!-- Class name -->
+                    <td>
+                      <input class="edit-input" id="class-${id}"
+                        value="${esc(item.class_name === 'Unknown' ? '' : (item.class_name || ''))}"
+                        placeholder="Class" style="min-width:60px;" />
+                    </td>
+
+                    <!-- Subject -->
+                    <td>
+                      <input class="edit-input" id="subject-${id}"
+                        value="${esc(item.subject || '')}"
+                        placeholder="Subject" style="min-width:90px;" />
+                    </td>
+
+                    <!-- Date (read-only) -->
+                    <td style="color:var(--platinum-muted);font-size:.82rem;">
+                      ${item.date || 'N/A'}
+                    </td>
+
+                    <!-- Time (read-only display; time editing is optional) -->
+                    <td style="color:var(--platinum-muted);font-size:.82rem;">
+                      ${formatTime(item.time)}
+                    </td>
+
+                    <!-- Status -->
+                    <td>
+                      <select class="edit-select" id="status-${id}">
+                        <option value="present" ${item.status === 'present' ? 'selected' : ''}>Present</option>
+                        <option value="absent"  ${item.status === 'absent' ? 'selected' : ''}>Absent</option>
+                        <option value="late"    ${item.status === 'late' ? 'selected' : ''}>Late</option>
+                      </select>
+                    </td>
+
+                    <!-- Source (read-only) -->
+                    <td><span class="text-muted" style="font-size:.8rem;">${item.source || 'auto'}</span></td>
+
+                    <!-- Actions -->
+                    <td>
+                      <div style="display: flex; gap: 6px;">
+                        <button class="btn-save-row" id="save-${id}" onclick="saveRow('${id}')">Save</button>
+                        <button class="btn-delete-row" id="delete-${id}" onclick="deleteRow('${id}')">Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }
+
+              html += `</tbody></table></div></div>`;
+            }
+          }
+          html += `</div>`;
+        }
+
+        resultsArea.innerHTML = html;
+
+        // ── Pagination ─────────────────────────────────────
+        const totalPages = Math.ceil(total / pageSize);
+        document.getElementById('pagination-info').textContent =
+          `Showing ${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, total)} of ${total} records`;
+
+        const btns = document.getElementById('pagination-buttons');
+        btns.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        // Prev button
+        if (page > 1)
+          btns.innerHTML += `<button class="btn btn-ghost btn-sm" onclick="loadAttendance(${page - 1})">← Prev</button>`;
+
+        // Page number buttons — show max 5 around current page
+        const startPage = Math.max(1, page - 2);
+        const endPage = Math.min(totalPages, page + 2);
+
+        if (startPage > 1)
+          btns.innerHTML += `<button class="btn btn-ghost btn-sm" onclick="loadAttendance(1)">1</button>`;
+        if (startPage > 2)
+          btns.innerHTML += `<span style="padding:0 6px;color:var(--platinum-muted);">…</span>`;
+
+        for (let p = startPage; p <= endPage; p++) {
+          btns.innerHTML += `<button class="btn btn-sm ${p === page ? 'btn-primary' : 'btn-ghost'}" 
+            onclick="loadAttendance(${p})" 
+            style="${p === page ? 'pointer-events:none;' : ''}">${p}</button>`;
+        }
+
+        if (endPage < totalPages - 1)
+          btns.innerHTML += `<span style="padding:0 6px;color:var(--platinum-muted);">…</span>`;
+        if (endPage < totalPages)
+          btns.innerHTML += `<button class="btn btn-ghost btn-sm" onclick="loadAttendance(${totalPages})">${totalPages}</button>`;
+
+        // Next button
+        if (page < totalPages)
+          btns.innerHTML += `<button class="btn btn-ghost btn-sm" onclick="loadAttendance(${page + 1})">Next →</button>`;
+
+      } catch (err) {
+        resultsArea.innerHTML = `
+          <div style="text-align:center;padding:60px 0;color:var(--danger);">
+            <strong>Failed to load records:</strong> ${err.message}
+          </div>`;
+      }
+    }
+
+    // ── Save a single row ────────────────────────────────────
+    async function saveRow(id) {
+      const btn = document.getElementById(`save-${id}`);
+      btn.textContent = 'Saving…';
+      btn.classList.add('saving');
+      btn.classList.remove('saved', 'error');
+
+      // Helper: treat empty/whitespace as null — prevents Pydantic 422 on ""
+      const orNull = (v) => (typeof v === 'string' && v.trim() === '') ? null : (v || null);
+
+      const name = orNull(document.getElementById(`name-${id}`).value);
+      const roll = orNull(document.getElementById(`roll-${id}`).value);
+      const className = orNull(document.getElementById(`class-${id}`).value);
+      const subject = orNull(document.getElementById(`subject-${id}`).value);
+      const status = document.getElementById(`status-${id}`).value;
+
+      // Client-side validation
+      if (!status) {
+        showToast('Status is required', 'warning');
+        btn.textContent = 'Save'; btn.classList.remove('saving'); return;
+      }
+      if (!subject) {
+        showToast('Subject cannot be empty', 'warning');
+        btn.textContent = 'Save'; btn.classList.remove('saving'); return;
+      }
+
+      const payload = {
+        status,
+        name,
+        roll_number: roll,
+        class_name: className,
+        subject,
+      };
+
+      // Debug: confirm exactly what we're sending
+      console.log(`[saveRow] id=${id} payload:`, JSON.stringify(payload));
+
+      try {
+        await AttendanceAPI.update(id, payload);
+        btn.textContent = '✓ Saved';
+        btn.classList.remove('saving');
+        btn.classList.add('saved');
+        showToast('Record updated successfully', 'success');
+
+        // Reload the table data slightly later to reflect updated groupings and database state
+        setTimeout(() => {
+          btn.textContent = 'Save';
+          btn.classList.remove('saved');
+          loadAttendance(currentPage);
+        }, 1200);
+      } catch (err) {
+        console.error(`[saveRow] id=${id} error:`, err.message);
+        btn.textContent = 'Error';
+        btn.classList.remove('saving');
+        btn.classList.add('error');
+        showToast(err.message || 'Save failed', 'error');
+        setTimeout(() => { btn.textContent = 'Save'; btn.classList.remove('error'); }, 3000);
+      }
+    }
+
+    // ── Delete a single row ────────────────────────────────────
+    async function deleteRow(id) {
+      if (!confirm("Are you sure you want to delete this record? This cannot be undone.")) return;
+
+      const btn = document.getElementById(`delete-${id}`);
+      const row = document.getElementById(`row-${id}`);
+
+      btn.textContent = '...';
+      btn.classList.add('deleting');
+
+      try {
+        await AttendanceAPI.delete(id);
+        row.style.opacity = '0';
+        row.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => {
+          row.remove();
+          showToast('Record deleted', 'success');
+        }, 300);
+      } catch (err) {
+        console.error(`[deleteRow] id=${id} error:`, err.message);
+        btn.textContent = 'Delete';
+        btn.classList.remove('deleting');
+        showToast(err.message || 'Delete failed', 'error');
+      }
+    }
+
+    // ── Helpers ──────────────────────────────────────────────
+    function esc(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function clearFilters() {
+      document.getElementById('filter-class').value = '';
+      document.getElementById('filter-date').value = '';
+      document.getElementById('filter-subject').value = '';
+      loadAttendance(1);
+    }
+
+    async function exportAttendance() {
+      const btn = document.getElementById('export-btn');
+      btn.disabled = true;
+      btn.textContent = 'Exporting…';
+      try {
+        // Pass exactly the same filters currently active on the page
+        const classVal = document.getElementById('filter-class').value || undefined;
+        const dateVal = document.getElementById('filter-date').value || undefined;
+        const subjectVal = document.getElementById('filter-subject').value || undefined;
+
+        const filters = {
+          class_name: classVal,
+          startDate: dateVal,   // single-date filter maps to start_date
+          endDate: dateVal,   // same date → exact day export
+          subject: subjectVal,
+          format: 'xlsx',
+        };
+
+        const blob = await AttendanceAPI.export(filters);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `attendance_${new Date().toISOString().slice(0, 10)}.xlsx`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Export downloaded!', 'success');
+      } catch (err) {
+        showToast(err.message || 'Export failed', 'error');
+      }
+      btn.disabled = false;
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Export Excel`;
+    }
+
+    // ── Init ─────────────────────────────────────────────────
+    loadClassDropdown().then(() => loadAttendance());
+  </script>
+</body>
+
+</html>

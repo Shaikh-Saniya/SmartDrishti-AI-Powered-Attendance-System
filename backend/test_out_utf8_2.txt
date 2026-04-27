@@ -1,0 +1,40 @@
+﻿Fetching a test face image...
+Logging in...
+Registering a student with the face image...
+Student Registration Status: 201
+Student created with ID: 0b48eba5-c69e-4a4e-8d82-f8b489f467a7
+Processing group attendance with the same image...
+Process Group Status: 202
+Task created with ID: 8d74c8eb-0cff-43c4-a5de-7439ee1028a0
+Polling task status...
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Status: pending
+Cleaning up...

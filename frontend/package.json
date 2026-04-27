@@ -1,0 +1,13 @@
+{
+  "name": "drishti-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Drishti Face Attendance System",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "dev": "python -m http.server 3000"
+  },
+  "keywords": ["attendance", "face-recognition", "frontend"],
+  "author": "",
+  "license": "MIT"
+}

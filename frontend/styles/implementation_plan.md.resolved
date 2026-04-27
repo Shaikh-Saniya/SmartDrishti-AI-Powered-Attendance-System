@@ -1,0 +1,38 @@
+# Dashboard Graph Implementation Plan
+
+The dashboard currently only has navigation cards. Adding a visually stunning, animated graph will make it look much more dynamic and professional.
+
+## Proposed Idea: Weekly Attendance Trend (Smooth Area Chart)
+
+I propose adding a **Weekly Attendance Trend** chart right above the dashboard cards. 
+
+### Visual Design & Animations
+* **Chart Type**: A smooth, curved Area Chart using **Chart.js**.
+* **Styling**: The line will use your premium golden accent color (`--chamoisee`). Underneath the line, there will be a beautiful gradient that fades from semi-transparent gold at the top to completely transparent at the bottom.
+* **Hover Effects**: When hovering over data points, a glassmorphic (blurred, semi-transparent dark) tooltip will smoothly appear showing the exact date and number of students present. The point itself will animate and glow.
+* **Entrance Animation**: When the dashboard loads, the graph line will smoothly draw itself from left to right.
+
+### Technical Implementation
+
+To make this work with real data, we will need to:
+
+#### 1. Backend Changes
+[NEW] `backend/app/api/v1/stats.py` (or add to `attendance.py`)
+* Create a new endpoint `/api/v1/attendance/trend` that queries the database to count the total number of "present" attendance records grouped by date for the last 7-10 days.
+
+#### 2. Frontend API
+[MODIFY] `frontend/scripts/api.js`
+* Add a `getTrend()` method to `AttendanceAPI` to fetch the data from the new endpoint.
+
+#### 3. Frontend UI
+[MODIFY] `frontend/dashboard.html`
+* Include the Chart.js library via CDN.
+* Add a new card container for the chart above the existing 4 grid cards.
+* Write a script to fetch the trend data, generate the golden gradient, and initialize the animated Chart.js instance.
+
+## Open Questions
+1. Does the **Weekly Attendance Trend** sound like the right metric for you, or would you prefer a different metric (e.g., a Bar chart showing *Today's Attendance by Class*)?
+2. Are you okay with me pulling in `Chart.js` via a CDN link in the HTML file to render the graphics?
+
+## User Review Required
+Please review the proposed graph idea. Let me know if you want to proceed with this plan, or if you'd like to tweak the idea!

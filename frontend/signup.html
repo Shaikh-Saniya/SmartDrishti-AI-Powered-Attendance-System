@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — Drishti</title>
+  <meta name="description" content="Create your Drishti account to manage face-based attendance." />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <!-- Ambient Glows -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-right"></div>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">
+      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15"/><circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="16" cy="12" r="2" fill="currentColor"/></svg>
+      Drishti
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="signup.html" class="active">Sign Up</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+
+  <!-- ═══════════ SIGNUP FORM ═══════════ -->
+  <div class="auth-layout">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Create Account</h2>
+        <p>Join Drishti to manage your classroom attendance</p>
+      </div>
+
+      <form id="signup-form" autocomplete="on">
+        <div class="form-group">
+          <label class="form-label" for="signup-name">Full Name</label>
+          <input
+            class="form-input"
+            type="text"
+            id="signup-name"
+            name="name"
+            placeholder="Your full name"
+            required
+            autocomplete="name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-email">Email Address</label>
+          <input
+            class="form-input"
+            type="email"
+            id="signup-email"
+            name="email"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-password">Password</label>
+          <input
+            class="form-input"
+            type="password"
+            id="signup-password"
+            name="password"
+            placeholder="Create a strong password"
+            required
+            autocomplete="new-password"
+            minlength="8"
+          />
+          <p class="form-hint">Minimum 8 characters</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="signup-btn">
+          Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="scripts/api.js"></script>
+  <script src="scripts/main.js"></script>
+  <script>
+    redirectIfAuth();
+
+    document.getElementById('signup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('signup-btn');
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+
+      if (password.length < 8) {
+        showToast('Password must be at least 8 characters', 'warning');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      try {
+        await AuthAPI.signup(name, email, password);
+        showToast('Account created! Redirecting to login...', 'success');
+        setTimeout(() => window.location.href = 'login.html', 1200);
+      } catch (err) {
+        showToast(err.message || 'Signup failed. Please try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+      }
+    });
+  </script>
+</body>
+</html>

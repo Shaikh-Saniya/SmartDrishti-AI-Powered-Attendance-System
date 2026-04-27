@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — SmartDrishti</title>
+  <meta name="description" content="Drishti Dashboard — manage students, attendance, and reports." />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+
+<body>
+  <!-- Ambient Glows -->
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-right"></div>
+
+  <!-- ═══════════ NAVBAR ═══════════ -->
+  <nav class="navbar">
+    <a href="dashboard.html" class="nav-brand">
+      <svg viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15" />
+        <circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none" />
+        <path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" />
+        <circle cx="16" cy="12" r="2" fill="currentColor" />
+      </svg>
+      SmartDrishti
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="manage-students.html">Students</a>
+      <a href="view-attendance.html">Attendance</a>
+      <a href="#" data-action="logout">Logout</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+
+  <!-- ═══════════ PAGE CONTENT ═══════════ -->
+  <div class="page-wrapper">
+    <div class="page-content">
+      <div class="container">
+
+        <!-- Welcome -->
+        <div class="section-header fade-in-up">
+          <h2>Welcome back, Admin</h2>
+          <p>Here's an overview of your attendance management tools.</p>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-grid">
+
+          <!-- Register Student -->
+          <a href="register-student.html" class="card card-clickable dashboard-card fade-in-up stagger-1"
+            id="card-register">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <line x1="19" x2="19" y1="8" y2="14" />
+                <line x1="22" x2="16" y1="11" y2="11" />
+              </svg>
+            </div>
+            <div class="card-title">Register New Student</div>
+            <p class="card-description">Add a new student with their name, roll number, and face image for recognition.
+            </p>
+            <div class="card-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+
+          <!-- View Attendance -->
+          <a href="view-attendance.html" class="card card-clickable dashboard-card fade-in-up stagger-2"
+            id="card-view-attendance">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                <path d="m9 14 2 2 4-4" />
+              </svg>
+            </div>
+            <div class="card-title">View Attendance</div>
+            <p class="card-description">Browse attendance records with filters. Export to CSV or Excel for reports.</p>
+            <div class="card-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+
+          <!-- Mark Attendance -->
+          <a href="mark-attendance.html" class="card card-clickable dashboard-card fade-in-up stagger-3"
+            id="card-mark-attendance">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                <circle cx="12" cy="13" r="3" />
+              </svg>
+            </div>
+            <div class="card-title">Mark Attendance</div>
+            <p class="card-description">Upload a group photo and let AI automatically detect and mark attendance.</p>
+            <div class="card-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+
+          <!-- Manage Students -->
+          <a href="manage-students.html" class="card card-clickable dashboard-card fade-in-up stagger-4"
+            id="card-manage-students">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div class="card-title">Manage Students</div>
+            <p class="card-description">View, edit, or remove students and their registered face images.</p>
+            <div class="card-arrow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" />
+                <path d="m12 5 7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- Chart Section -->
+        <div class="card fade-in-up stagger-5" style="margin-top: 32px; padding: 32px; display: none;"
+          id="trend-chart-container">
+          <div class="section-header"
+            style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <h2 style="margin: 0; font-size: 1.8rem;">Attendance Trends</h2>
+              <p style="font-size: 0.95rem; color: #666; margin-top: 8px;">Track attendance patterns across different
+                subjects.</p>
+            </div>
+          </div>
+          <div style="position: relative; height: 380px; width: 100%;">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Summary Boxes Section -->
+        <div class="fade-in-up stagger-5"
+          style="display: none; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 32px;"
+          id="summary-boxes-container">
+
+          <!-- Box 1: Avg Attendance -->
+          <div class="card" style="padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div
+                style="font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+                AVG ATTENDANCE</div>
+              <div style="font-size: 2.8rem; font-weight: 700; color: var(--chamoisee); line-height: 1;"
+                id="summary-avg">0%</div>
+              <div
+                style="font-size: 0.8rem; font-weight: 600; color: #666; text-transform: uppercase; margin-top: 8px; letter-spacing: 0.5px;">
+                OVERALL ACROSS CLASSES</div>
+            </div>
+            <div
+              style="width: 54px; height: 54px; border-radius: 14px; background: rgba(152, 126, 93, 0.1); display: flex; align-items: center; justify-content: center; color: var(--chamoisee);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3v18h18" />
+                <path d="m19 9-5 5-4-4-3 3" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Box 2: Best Class -->
+          <div class="card" style="padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div
+                style="font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+                TOP PERFORMING CLASS</div>
+              <div style="font-size: 2.8rem; font-weight: 700; color: var(--platinum); line-height: 1;"
+                id="summary-best-class">N/A</div>
+              <div
+                style="font-size: 0.8rem; font-weight: 600; color: #666; text-transform: uppercase; margin-top: 8px; letter-spacing: 0.5px;"
+                id="summary-best-pct">0% ATTENDANCE</div>
+            </div>
+            <div
+              style="width: 54px; height: 54px; border-radius: 14px; background: rgba(51, 51, 51, 0.08); display: flex; align-items: center; justify-content: center; color: var(--platinum);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                <line x1="9" x2="9.01" y1="9" y2="9" />
+                <line x1="15" x2="15.01" y1="9" y2="9" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Box 3: Worst Class -->
+          <div class="card" style="padding: 24px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div
+                style="font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+                NEEDS IMPROVEMENT</div>
+              <div style="font-size: 2.8rem; font-weight: 700; color: var(--platinum-muted); line-height: 1;"
+                id="summary-worst-class">N/A</div>
+              <div
+                style="font-size: 0.8rem; font-weight: 600; color: #666; text-transform: uppercase; margin-top: 8px; letter-spacing: 0.5px;"
+                id="summary-worst-pct">0% ATTENDANCE</div>
+            </div>
+            <div
+              style="width: 54px; height: 54px; border-radius: 14px; background: rgba(113, 113, 122, 0.1); display: flex; align-items: center; justify-content: center; color: var(--platinum-muted);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                <line x1="16" x2="16" y1="2" y2="6" />
+                <line x1="8" x2="8" y1="2" y2="6" />
+                <line x1="3" x2="21" y1="10" y2="10" />
+              </svg>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <script src="scripts/api.js"></script>
+  <script src="scripts/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    if (!requireAuth()) { /* redirects */ }
+
+    const user = getUser();
+
+    // Chart.js rendering
+    async function loadTrendChart() {
+      try {
+        const trendData = await AttendanceAPI.getTrend();
+        if (!trendData || trendData.length === 0) return;
+
+        document.getElementById('trend-chart-container').style.display = 'block';
+        const ctx = document.getElementById('trendChart').getContext('2d');
+
+        // Align with project CSS theme (Golden, Silver, Gray, Black)
+        const colors = [
+          'rgba(152, 126, 93, 1)',   // Chamoisee (Golden Brown)
+          'rgba(176, 181, 179, 1)',  // Ash Gray (Silver)
+          'rgba(51, 51, 51, 1)',     // Jet (Black)
+          'rgba(209, 209, 205, 1)',  // Timberwolf (Light Gray)
+          'rgba(120, 120, 120, 1)'   // Medium Gray
+        ];
+
+        const datasets = trendData.map((clsData, index) => {
+          const colorStr = colors[index % colors.length];
+          // Gradient fill
+          const bgGradient = ctx.createLinearGradient(0, 0, 0, 380);
+          bgGradient.addColorStop(0, colorStr.replace('1)', '0.15)'));
+          bgGradient.addColorStop(1, colorStr.replace('1)', '0.0)'));
+
+          return {
+            label: clsData.class_name,
+            data: clsData.trend.map(d => d.count),
+            borderColor: colorStr,
+            backgroundColor: bgGradient,
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.4, // Smooth curves
+            pointBackgroundColor: colorStr, // Colored dot
+            pointBorderColor: '#fff', // White outline
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+          };
+        });
+
+        // Use the subjects for the x-axis labels
+        const labels = trendData[0].trend.map(d => d.subject);
+
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: datasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: { top: 20 }
+            },
+            interaction: {
+              mode: 'index',
+              intersect: false,
+            },
+            plugins: {
+              legend: {
+                position: 'top',
+                align: 'end',
+                labels: {
+                  font: { family: "'Inter', sans-serif", size: 13, weight: '500' },
+                  usePointStyle: true,
+                  pointStyle: 'circle',
+                  boxWidth: 8,
+                  padding: 20,
+                  color: '#444'
+                }
+              },
+              tooltip: {
+                // Light glassmorphic tooltip matching the reference image
+                backgroundColor: 'rgba(240, 246, 255, 0.95)',
+                titleColor: '#222',
+                bodyColor: '#333',
+                borderColor: 'rgba(152, 126, 93, 0.2)', // Golden border
+                borderWidth: 1,
+                padding: 14,
+                boxPadding: 8,
+                usePointStyle: true,
+                titleFont: { family: "'Inter', sans-serif", size: 13, weight: '600' },
+                bodyFont: { family: "'Inter', sans-serif", size: 13, weight: '500' },
+                cornerRadius: 10,
+                caretSize: 6,
+                callbacks: {
+                  title: function (context) {
+                    return context[0].label; // The subject name
+                  },
+                  label: function (context) {
+                    return `  ${context.dataset.label}:  ${context.raw}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false, drawBorder: false },
+                ticks: { font: { family: "'Inter', sans-serif", size: 12, weight: '500' }, color: '#666' }
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(0,0,0,0.04)',
+                  drawBorder: false,
+                },
+                ticks: {
+                  stepSize: 1,
+                  font: { family: "'Inter', sans-serif", size: 12 },
+                  color: '#888',
+                  padding: 10
+                },
+                border: { display: false }
+              }
+            },
+            animation: {
+              duration: 1500, // Smooth entrance drawing animation
+              easing: 'easeOutQuart'
+            }
+          }
+        });
+      } catch (err) {
+        console.error("Failed to load trend chart:", err);
+      }
+    }
+
+    async function loadSummaryBoxes() {
+      try {
+        const summary = await AttendanceAPI.getSummary();
+        if (!summary) return;
+
+        document.getElementById('summary-boxes-container').style.display = 'grid';
+
+        document.getElementById('summary-avg').textContent = `${summary.avg_attendance_percentage}%`;
+
+        document.getElementById('summary-best-class').textContent = summary.best_class;
+        document.getElementById('summary-best-pct').textContent = `${summary.best_class_percentage}% ATTENDANCE`;
+
+        document.getElementById('summary-worst-class').textContent = summary.worst_class;
+        document.getElementById('summary-worst-pct').textContent = `${summary.worst_class_percentage}% ATTENDANCE`;
+      } catch (err) {
+        console.error("Failed to load summary stats:", err);
+      }
+    }
+
+    if (isAuthenticated()) {
+      loadTrendChart();
+      loadSummaryBoxes();
+    }
+  </script>
+</body>
+
+</html>
