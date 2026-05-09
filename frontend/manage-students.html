@@ -1,12 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manage Students — Drishti</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Manage Students — SmartDrishti</title>
   <meta name="description" content="Manage registered students — view, edit, or remove student records." />
   <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="css/cglass.css" />
+  <style>
+    .year-edit-btn {
+      transition: all 0.2s;
+      background-color: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      color: #000000;
+    }
+
+    .year-edit-btn:hover {
+      background-color: #e5e7eb;
+    }
+
+    .year-edit-btn.active {
+      background: var(--chamoisee, #7EACB5);
+      color: #fff;
+      border-color: var(--chamoisee, #7EACB5);
+    }
+
+    /* ── Group headers ─────────────────────────────────────── */
+    .dept-card {
+      border: 1px solid rgba(126, 172, 181, 0.2);
+      border-radius: 24px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .dept-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 32px 24px;
+      background: linear-gradient(180deg, rgba(126, 172, 181, 0.12) 0%, transparent 100%);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .dept-header:hover {
+      background: rgba(126, 172, 181, 0.18);
+    }
+
+    .dept-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--chamoisee, #7EACB5);
+      letter-spacing: -0.02em;
+    }
+
+    .dept-badge {
+      font-size: 0.85rem;
+      color: var(--platinum-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .dept-body {
+      padding: 24px;
+      background: transparent;
+    }
+
+    .chevron-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--chamoisee, #7EACB5);
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    /* ── Student Action Buttons Visibility Fix ──────────────── */
+    .student-actions {
+      display: flex !important;
+      gap: 8px !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .student-actions .btn {
+      background-color: #ffffff !important;
+      color: #1a1a1a !important;
+      opacity: 1 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border: 1px solid rgba(0, 0, 0, 0.15) !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+      width: 32px !important;
+      height: 32px !important;
+      padding: 0 !important;
+      border-radius: 8px !important;
+    }
+
+    .student-actions .btn svg {
+      stroke: #1a1a1a !important;
+      width: 16px !important;
+      height: 16px !important;
+      display: block !important;
+    }
+
+    .student-actions .btn:hover {
+      background-color: #f3f4f6 !important;
+      border-color: rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .student-actions .btn[title="Delete"] svg {
+      stroke: #ef4444 !important;
+    }
+
+    .student-actions .btn[title="Delete"]:hover {
+      background-color: #fef2f2 !important;
+      border-color: #ef4444 !important;
+    }
+
+    /* ── Frosted Modal Effect ──────────────────────────────── */
+    #edit-student-modal .modal {
+      background: rgba(255, 255, 255, 0.6) !important;
+      backdrop-filter: blur(20px) saturate(160%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.7) !important;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    #edit-student-modal .modal-header h3 {
+      color: #1a1a1a !important;
+    }
+
+    #edit-student-modal .form-label {
+      color: #333333 !important;
+      font-weight: 600 !important;
+    }
+  </style>
 </head>
+
 <body>
   <!-- Ambient Glows -->
   <div class="ambient-glow"></div>
@@ -15,8 +156,14 @@
   <!-- ═══════════ NAVBAR ═══════════ -->
   <nav class="navbar">
     <a href="dashboard.html" class="nav-brand">
-      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15"/><circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="16" cy="12" r="2" fill="currentColor"/></svg>
-      Drishti
+      <svg viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15" />
+        <circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none" />
+        <path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" />
+        <circle cx="16" cy="12" r="2" fill="currentColor" />
+      </svg>
+      SmartDrishti
     </a>
     <div class="nav-links" id="nav-links">
       <a href="dashboard.html">Dashboard</a>
@@ -36,25 +183,35 @@
       <div class="container">
 
         <!-- Header -->
-        <div class="flex-between fade-in-up" style="margin-bottom: 24px;">
-          <div class="section-header" style="margin-bottom: 0;">
-            <h2>Manage Students</h2>
-            <p>View and manage all registered students and their face data.</p>
+          <div class="flex-between fade-in-up" style="margin-bottom: 24px;">
+            <div class="section-header" style="margin-bottom: 0;">
+              <h2>Manage Students</h2>
+              <p>View and manage all registered students and their face data.</p>
+            </div>
+            <div style="display: flex; gap: 12px;">
+              <button class="btn btn-secondary btn-sm" onclick="hardDeleteAll()" id="cleanup-btn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                Clear Inactive
+              </button>
+              <a href="register-student.html" class="btn btn-primary btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" x2="12" y1="5" y2="19" />
+                  <line x1="5" x2="19" y1="12" y2="12" />
+                </svg>
+                Add Student
+              </a>
+            </div>
           </div>
-          <a href="register-student.html" class="btn btn-primary btn-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
-            Add Student
-          </a>
-        </div>
 
         <!-- Search & Filter -->
         <div class="filters-row fade-in-up stagger-1">
           <div class="filter-group" style="flex: 2;">
             <label>Search</label>
-            <input class="form-input" type="text" id="search-input" 
-                   placeholder="Search by name or roll number..." 
-                   oninput="debounceSearch()" />
+            <input class="form-input" type="text" id="search-input" placeholder="Search by name or roll number..."
+              oninput="debounceSearch()" />
           </div>
+          <!-- Class -->
           <div class="filter-group">
             <label>Class</label>
             <select class="form-select" id="filter-class" onchange="loadStudents()">
@@ -68,6 +225,8 @@
               <option value="CE-A">CE-A</option>
             </select>
           </div>
+
+          <!-- Department -->
           <div class="filter-group">
             <label>Department</label>
             <select class="form-select" id="filter-dept" onchange="loadStudents()">
@@ -86,16 +245,24 @@
         </div>
 
         <!-- Pagination -->
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px;" id="students-pagination">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px;"
+          id="students-pagination">
           <p class="text-muted" style="font-size: 0.85rem;" id="students-info"></p>
           <div style="display: flex; gap: 8px;" id="students-page-btns"></div>
         </div>
 
         <!-- Empty State -->
         <div class="empty-state" id="students-empty" style="display: none;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" x2="19" y1="8" y2="14" />
+            <line x1="22" x2="16" y1="11" y2="11" />
+          </svg>
           <h3>No Students Found</h3>
-          <p>No students match your search. Try different filters or <a href="register-student.html">register a new student</a>.</p>
+          <p>No students match your search. Try different filters or <a href="register-student.html">register a new
+              student</a>.</p>
         </div>
 
       </div>
@@ -116,14 +283,26 @@
           <label class="form-label" for="edit-name">Full Name</label>
           <input class="form-input" type="text" id="edit-name" required />
         </div>
-        <div class="grid-2" style="gap: 16px;">
-          <div class="form-group">
-            <label class="form-label" for="edit-class">Class</label>
-            <input class="form-input" type="text" id="edit-class" required />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="edit-dept">Department</label>
-            <input class="form-input" type="text" id="edit-dept" />
+        <div class="form-group">
+          <label class="form-label" for="edit-class">Class</label>
+          <input class="form-input" type="text" id="edit-class" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-dept">Department</label>
+          <input class="form-input" type="text" id="edit-dept" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year</label>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-ghost btn-sm year-edit-btn" id="edit-btn-year-FY"
+              onclick="setEditYear('FY')">FY</button>
+            <button type="button" class="btn btn-ghost btn-sm year-edit-btn" id="edit-btn-year-SY"
+              onclick="setEditYear('SY')">SY</button>
+            <button type="button" class="btn btn-ghost btn-sm year-edit-btn" id="edit-btn-year-TY"
+              onclick="setEditYear('TY')">TY</button>
+            <button type="button" class="btn btn-ghost btn-sm year-edit-btn" id="edit-btn-year-LY"
+              onclick="setEditYear('LY')">LY</button>
+            <input type="hidden" id="edit-year" value="" />
           </div>
         </div>
         <div class="grid-2" style="gap: 16px;">
@@ -147,6 +326,8 @@
 
   <script src="scripts/api.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+  <script src="scripts/cglass-bg.js"></script>
   <script>
     if (!requireAuth()) { /* redirect */ }
 
@@ -155,6 +336,13 @@
     let searchTimer;
 
     loadStudents();
+
+    const DEPT_MAP = { CSE: 'Computer Science', ECE: 'Electronics', ME: 'Mechanical', CE: 'Civil' };
+    function deptFromClass(cls) {
+      if (!cls || cls === 'Unknown' || cls === 'Unassigned') return 'Other Departments';
+      const prefix = cls.split('-')[0].toUpperCase();
+      return DEPT_MAP[prefix] || 'Other Departments';
+    }
 
     function debounceSearch() {
       clearTimeout(searchTimer);
@@ -197,73 +385,105 @@
         empty.style.display = 'none';
         pagination.style.display = 'flex';
 
-        // Group students by class
-        const grouped = {};
+        // Group students by department -> class
+        const deptGrouped = {};
         items.forEach(student => {
           const cls = student.class_ || 'Unassigned';
-          if (!grouped[cls]) grouped[cls] = [];
-          grouped[cls].push(student);
+          const dept = student.department || deptFromClass(cls);
+          if (!deptGrouped[dept]) deptGrouped[dept] = {};
+          if (!deptGrouped[dept][cls]) deptGrouped[dept][cls] = [];
+          deptGrouped[dept][cls].push(student);
         });
 
         let html = '';
-        const sortedClasses = Object.keys(grouped).sort();
+        const sortedDepts = Object.keys(deptGrouped).sort();
 
-        for (const cls of sortedClasses) {
+        let deptIdx = 0;
+        for (const dept of sortedDepts) {
+          const deptId = `dept-${deptIdx++}`;
+          const classes = Object.keys(deptGrouped[dept]).sort();
+          let deptTotal = 0;
+          classes.forEach(c => deptTotal += deptGrouped[dept][c].length);
+
           html += `
-            <div class="group-section" style="background: rgba(152,126,93,0.06); border: 1px solid rgba(152,126,93,0.15); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 40px; box-shadow: 0 4px 16px rgba(152,126,93,0.04);">
-              <div class="group-header" style="background: linear-gradient(90deg, rgba(152,126,93,0.12) 0%, transparent 100%); border-left: 4px solid var(--chamoisee); padding: 16px 20px; border-radius: 6px; margin-top: 0; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="margin: 0; font-size: 1.15rem; color: var(--chamoisee);">🎓 Class: ${cls}</h3>
-                <span style="font-weight: 600; font-size: 0.9rem; color: var(--chamoisee);">${grouped[cls].length} student${grouped[cls].length !== 1 ? 's' : ''}</span>
+            <div class="dept-card">
+              <div class="dept-header" onclick="toggleDrilldown('${deptId}')">
+                <svg class="chevron-icon" id="chev-${deptId}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                <span class="dept-name">${dept}</span>
+                <span class="dept-badge">${classes.length} class${classes.length !== 1 ? 'es' : ''} &nbsp;·&nbsp; ${deptTotal} student${deptTotal !== 1 ? 's' : ''}</span>
               </div>
-              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px;">
+              <div class="dept-body" id="${deptId}" style="display: none;">
           `;
 
-          html += grouped[cls].map(student => {
-            const initials = getInitials(student.name);
-            const hasImage = student.images && student.images.length > 0;
-            return `
-              <div class="student-card" id="student-${student.id}">
-                <div class="student-avatar">
-                  ${hasImage 
-                    ? `<img src="${student.images[0].image_path}" alt="${student.name}" onerror="this.parentElement.innerHTML='${initials}'" />`
-                    : initials
-                  }
+          for (const cls of classes) {
+            const students = deptGrouped[dept][cls];
+            html += `
+              <div class="group-section" style="background: rgba(152,126,93,0.06); border: 1px solid rgba(152,126,93,0.15); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px;">
+                <div class="group-header" style="background: linear-gradient(90deg, rgba(152,126,93,0.12) 0%, transparent 100%); border-left: 4px solid var(--chamoisee); padding: 12px 16px; border-radius: 6px; margin-top: 0; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                  <h4 style="margin: 0; font-size: 1rem; color: var(--chamoisee);">🎓 Class: ${cls}</h4>
+                  <span style="font-weight: 600; font-size: 0.85rem; color: var(--chamoisee);">${students.length} student${students.length !== 1 ? 's' : ''}</span>
                 </div>
-                <div class="student-info">
-                  <div class="student-name">${student.name}</div>
-                  <div class="student-roll">${student.roll_number} · ${student.class_ || ''}${student.department ? ' · ' + student.department : ''}</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px;">
+            `;
+
+            html += students.map(student => {
+              const initials = getInitials(student.name);
+              const hasImage = student.images && student.images.length > 0;
+              return `
+                <div class="student-card" id="student-${student.id}">
+                  <div class="student-avatar">
+                    ${hasImage
+                  ? `<img src="${student.images[0].image_path}" alt="${student.name}" onerror="this.parentElement.innerHTML='${initials}'" />`
+                  : initials
+                }
+                  </div>
+                  <div class="student-info">
+                    <div class="student-name" style="font-size:0.95rem;">${student.name}</div>
+                    <div class="student-roll" style="font-size:0.75rem;">${student.roll_number} · ${student.class_ || ''}${student.year ? ' (' + student.year + ')' : ''}</div>
+                  </div>
+                  <div class="student-actions">
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Edit" onclick='editStudent(${JSON.stringify(student).replace(/'/g, "&#39;")})'>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                    </button>
+                    <button class="btn btn-ghost btn-icon btn-sm" title="Delete" style="color: var(--danger);" onclick="deleteStudent('${student.id}', '${student.name}')">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    </button>
+                  </div>
                 </div>
-                <div class="student-actions">
-                  <button class="btn btn-ghost btn-icon btn-sm" title="Edit" onclick='editStudent(${JSON.stringify(student).replace(/'/g, "&#39;")})'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                  </button>
-                  <button class="btn btn-ghost btn-icon btn-sm" title="Delete" style="color: var(--danger);" onclick="deleteStudent('${student.id}', '${student.name}')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                  </button>
+              `;
+            }).join('');
+
+            html += `
                 </div>
               </div>
             `;
-          }).join('');
+          }
 
-          html += `
-              </div>
-            </div>
-          `;
+          html += `</div></div>`;
         }
 
         grid.innerHTML = html;
 
         // Pagination
         const totalPages = Math.ceil(total / studentsLimit);
-        document.getElementById('students-info').textContent = `Showing ${(page-1)*studentsLimit + 1}–${Math.min(page*studentsLimit, total)} of ${total} students`;
+        document.getElementById('students-info').textContent = `Showing ${(page - 1) * studentsLimit + 1}–${Math.min(page * studentsLimit, total)} of ${total} students`;
 
         const btns = document.getElementById('students-page-btns');
         btns.innerHTML = '';
-        if (page > 1) btns.innerHTML += `<button class="btn btn-ghost btn-sm" onclick="loadStudents(${page-1})">← Prev</button>`;
-        if (page < totalPages) btns.innerHTML += `<button class="btn btn-ghost btn-sm" onclick="loadStudents(${page+1})">Next →</button>`;
+        if (page > 1) btns.innerHTML += `<button class="btn btn-ghost btn-sm" onclick="loadStudents(${page - 1})">← Prev</button>`;
+        if (page < totalPages) btns.innerHTML += `<button class="btn btn-ghost btn-sm" onclick="loadStudents(${page + 1})">Next →</button>`;
 
       } catch (err) {
         grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--danger);">Failed to load students: ${err.message}</div>`;
+      }
+    }
+
+    function setEditYear(year) {
+      document.querySelectorAll('.year-edit-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('edit-year').value = year;
+      if (year) {
+        const btn = document.getElementById(`edit-btn-year-${year}`);
+        if (btn) btn.classList.add('active');
       }
     }
 
@@ -271,6 +491,7 @@
       document.getElementById('edit-id').value = student.id;
       document.getElementById('edit-name').value = student.name;
       document.getElementById('edit-class').value = student.class_ || '';
+      setEditYear(student.year || '');
       document.getElementById('edit-dept').value = student.department || '';
       document.getElementById('edit-email').value = student.email || '';
       document.getElementById('edit-phone').value = student.phone || '';
@@ -289,6 +510,7 @@
         await StudentAPI.update(id, {
           name: document.getElementById('edit-name').value.trim(),
           class_name: document.getElementById('edit-class').value.trim(),
+          year: document.getElementById('edit-year').value || null,
           department: document.getElementById('edit-dept').value.trim() || null,
           email: document.getElementById('edit-email').value.trim() || null,
           phone: document.getElementById('edit-phone').value.trim() || null,
@@ -315,6 +537,32 @@
         }
       });
     }
+
+    async function hardDeleteAll() {
+      confirmAction(`Permanently delete ALL inactive student records? This will also wipe their face embeddings and images from the server. This cannot be undone!`, async () => {
+        const btn = document.getElementById('cleanup-btn');
+        btn.disabled = true;
+        btn.textContent = 'Cleaning...';
+        try {
+          const res = await StudentAPI.hardDeleteInactive();
+          showToast(res.message, 'success');
+          loadStudents(1);
+        } catch (err) {
+          showToast(err.message || 'Cleanup failed', 'error');
+        }
+        btn.disabled = false;
+        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg> Clear Inactive`;
+      });
+    }
+
+    function toggleDrilldown(id) {
+      const body = document.getElementById(id);
+      const chev = document.getElementById('chev-' + id);
+      const isOpen = body.style.display !== 'none';
+      body.style.display = isOpen ? 'none' : 'block';
+      if (chev) chev.style.transform = isOpen ? '' : 'rotate(-180deg)';
+    }
   </script>
 </body>
+
 </html>

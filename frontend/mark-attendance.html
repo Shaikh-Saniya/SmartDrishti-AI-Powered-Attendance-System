@@ -1,12 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mark Attendance — Drishti</title>
+  <title>Mark Attendance — SmartDrishti</title>
   <meta name="description" content="Upload a group photo to auto-mark attendance using face recognition." />
   <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="css/cglass.css" />
+  <style>
+    .camera-text {
+      color: var(--chamoisee);
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .camera-container {
+      position: relative;
+      background: #000;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+
+    #camera-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
 </head>
+
 <body>
   <!-- Ambient Glows -->
   <div class="ambient-glow"></div>
@@ -15,8 +42,14 @@
   <!-- ═══════════ NAVBAR ═══════════ -->
   <nav class="navbar">
     <a href="dashboard.html" class="nav-brand">
-      <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15"/><circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="16" cy="12" r="2" fill="currentColor"/></svg>
-      Drishti
+      <svg viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="currentColor" fill-opacity="0.15" />
+        <circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="2" fill="none" />
+        <path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" />
+        <circle cx="16" cy="12" r="2" fill="currentColor" />
+      </svg>
+      SmartDrishti
     </a>
     <div class="nav-links" id="nav-links">
       <a href="dashboard.html">Dashboard</a>
@@ -88,23 +121,38 @@
           </h4>
 
           <div class="file-upload-area" id="group-upload-area" style="margin-bottom: 16px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-            <p>Drag and drop the group image here, or <span class="browse-text">browse</span></p>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+              <circle cx="12" cy="13" r="3" />
+            </svg>
+            <p>Drag and drop the group image here, <span class="browse-text">browse</span>, or <span class="camera-text"
+                id="open-camera">use camera</span></p>
             <input type="file" id="group-image" accept="image/jpeg,image/png,image/jpg" hidden />
           </div>
 
           <div style="display: flex; justify-content: center;">
-            <img id="group-preview" class="image-preview" alt="Group image preview" style="max-width: 100%; max-height: 300px;" />
+            <img id="group-preview" class="image-preview" alt="Group image preview"
+              style="max-width: 100%; max-height: 300px;" />
           </div>
 
-          <p class="form-hint" style="text-align: center;">Upload a clear group photo of the classroom. Supported: JPG, PNG (max 10 MB)</p>
+          <p class="form-hint" style="text-align: center;">Upload a clear group photo of the classroom. Supported: JPG,
+            PNG (max 10 MB)</p>
         </div>
 
         <!-- Process Button -->
-        <div class="fade-in-up stagger-2" style="display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 32px;">
+        <div class="fade-in-up stagger-2"
+          style="display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 32px;">
           <a href="dashboard.html" class="btn btn-ghost">Cancel</a>
           <button class="btn btn-primary btn-lg" id="process-btn" onclick="processAttendance()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+              <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+              <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+              <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
             Process Attendance
           </button>
         </div>
@@ -140,9 +188,37 @@
     </div>
   </div>
 
+  <!-- Camera Modal -->
+  <div class="modal-overlay" id="camera-modal">
+    <div class="modal" style="max-width: 640px;">
+      <div class="modal-header">
+        <h3>Capture Group Photo</h3>
+        <button type="button" class="modal-close">&times;</button>
+      </div>
+      <div class="camera-container">
+        <video id="camera-video" autoplay playsinline></video>
+        <canvas id="camera-canvas" style="display: none;"></canvas>
+      </div>
+      <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+        <button type="button" class="btn btn-secondary" id="close-camera-btn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="capture-photo-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M14.5 2H9.5L7 4.5H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-10a2 2 0 0 0-2-2h-3L14.5 2z" />
+            <circle cx="12" cy="13" r="3" />
+          </svg>
+          Capture Photo
+        </button>
+      </div>
+    </div>
+  </div>
+
 
   <script src="scripts/api.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+  <script src="scripts/cglass-bg.js"></script>
   <script>
     if (!requireAuth()) { /* redirect */ }
 
@@ -151,6 +227,59 @@
 
     // File upload
     initFileUpload('group-upload-area', 'group-image', 'group-preview');
+
+    // Camera Logic
+    const cameraModal = document.getElementById('camera-modal');
+    const openCameraBtn = document.getElementById('open-camera');
+    const closeCameraBtn = document.getElementById('close-camera-btn');
+    const captureBtn = document.getElementById('capture-photo-btn');
+    const video = document.getElementById('camera-video');
+    const canvas = document.getElementById('camera-canvas');
+    const imageInput = document.getElementById('group-image');
+    const imagePreview = document.getElementById('group-preview');
+    let stream = null;
+
+    openCameraBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); // Try back camera for attendance
+        video.srcObject = stream;
+        cameraModal.classList.add('active');
+      } catch (err) {
+        showToast('Could not access camera: ' + err.message, 'error');
+      }
+    });
+
+    const stopCamera = () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+      cameraModal.classList.remove('active');
+    };
+
+    closeCameraBtn.addEventListener('click', stopCamera);
+    document.querySelector('#camera-modal .modal-close').addEventListener('click', stopCamera);
+
+    captureBtn.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      canvas.toBlob((blob) => {
+        const file = new File([blob], "captured-group.jpg", { type: "image/jpeg" });
+
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        imageInput.files = dataTransfer.files;
+
+        imagePreview.src = URL.createObjectURL(blob);
+        imagePreview.classList.add('active');
+
+        stopCamera();
+        showToast('Group photo captured!', 'success');
+      }, 'image/jpeg', 0.9);
+    });
 
     async function processAttendance() {
       const subject = document.getElementById('att-subject').value;
@@ -224,7 +353,7 @@
       const totalFaces = result.total_faces || 0;
       const unknownCount = result.unknown_count || 0;
 
-      summary.textContent = `${totalFaces} face(s) detected — ${recognized.length - (recognized.filter(r=>r.unrecognized).length)} recognized, ${unknownCount} unknown`;
+      summary.textContent = `${totalFaces} face(s) detected — ${recognized.length - (recognized.filter(r => r.unrecognized).length)} recognized, ${unknownCount} unknown`;
 
       // Display recognized/unrecognized faces
       if (recognized.length > 0) {
@@ -240,16 +369,16 @@
             <div class="name" ${r.unauthorized ? 'style="color: var(--danger);"' : ''}>${r.name}</div>
             <div class="confidence" style="color: var(--chamoisee); font-weight: 700;">${(r.similarity * 100).toFixed(1)}% match</div>
             ${r.unauthorized
-              ? `<div class="confidence" style="font-size: 0.75rem; margin-top: 4px; color: var(--danger); font-weight: 600;">Unauthorized (Registered in ${r.registered_class})</div>`
-              : `<div class="confidence" style="font-size: 0.8rem; margin-top: 4px; color: var(--platinum-muted);">Class: ${r.marked_class || 'Unknown'}</div>`
-            }
+            ? `<div class="confidence" style="font-size: 0.75rem; margin-top: 4px; color: var(--danger); font-weight: 600;">Unauthorized (Registered in ${r.registered_class})</div>`
+            : `<div class="confidence" style="font-size: 0.8rem; margin-top: 4px; color: var(--platinum-muted);">Class: ${r.marked_class || 'Unknown'}</div>`
+          }
           </div>
         `).join('');
 
         // Display Unrecognized faces if any
         const unknownSection = document.getElementById('unknown-section');
         const unknownGrid = document.getElementById('unknown-faces');
-        
+
         if (unrecognized.length > 0) {
           unknownSection.style.display = 'block';
           unknownGrid.innerHTML = unrecognized.map((r, i) => `
@@ -287,4 +416,5 @@
     }
   </script>
 </body>
+
 </html>

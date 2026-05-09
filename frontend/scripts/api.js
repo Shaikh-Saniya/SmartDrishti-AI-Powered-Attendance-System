@@ -191,6 +191,7 @@ const StudentAPI = {
     formData.append('class_name', studentData.class_name || '');
 
     // Append optional fields
+    if (studentData.year) formData.append('year', studentData.year);
     if (studentData.department) formData.append('department', studentData.department);
     if (studentData.email) formData.append('email', studentData.email);
     if (studentData.phone) formData.append('phone', studentData.phone);
@@ -250,6 +251,10 @@ const StudentAPI = {
       method: 'DELETE',
     });
   },
+
+  async hardDeleteInactive() {
+    return apiRequest('/students/cleanup/all', { method: 'DELETE' });
+  },
 };
 
 
@@ -257,10 +262,12 @@ const StudentAPI = {
 const AttendanceAPI = {
   async list(page = 1, limit = 50, filters = {}) {
     const params = new URLSearchParams({ page, limit });
-    if (filters.date)       params.append('date',       filters.date);
+    if (filters.startDate)  params.append('start_date', filters.startDate);
+    if (filters.endDate)    params.append('end_date',   filters.endDate);
     if (filters.subject)    params.append('subject',    filters.subject);
     if (filters.studentId)  params.append('student_id', filters.studentId);
     if (filters.class_name) params.append('class_name', filters.class_name);
+    if (filters.year)       params.append('year',       filters.year);
     return apiRequest(`/attendance?${params}`);
   },
 

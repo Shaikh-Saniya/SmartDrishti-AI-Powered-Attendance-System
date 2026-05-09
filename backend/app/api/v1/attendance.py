@@ -100,22 +100,26 @@ async def get_attendance_summary(
 async def list_attendance(
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=50, ge=1, le=200),
-    date_filter: date | None = Query(default=None, alias="date"),
+    start_date: date | None = Query(default=None),
+    end_date: date | None = Query(default=None),
     subject: str | None = Query(default=None),
     student_id: uuid.UUID | None = Query(default=None),
     class_name: str | None = Query(default=None),
+    year: str | None = Query(default=None),
     db: AsyncSession = Depends(get_db),
     _current_user: User = Depends(get_current_active_user),
 ) -> PaginatedResponse[AttendanceResponse]:
-    """Get attendance records with optional filters (date, subject, class_name, student_id)."""
+    """Get attendance records with optional filters (start_date, end_date, subject, class_name, student_id, year)."""
     items_data, total = await attendance_service.list_attendance(
         db,
         page=page,
         limit=limit,
-        date_filter=date_filter,
+        start_date=start_date,
+        end_date=end_date,
         subject_filter=subject,
         student_id_filter=student_id,
         class_name_filter=class_name,
+        year_filter=year,
     )
     items = [AttendanceResponse.model_validate(item) for item in items_data]
     return PaginatedResponse.create(items=items, total=total, page=page, limit=limit)

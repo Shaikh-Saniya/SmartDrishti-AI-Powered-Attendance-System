@@ -5,8 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — SmartDrishti</title>
-  <meta name="description" content="Drishti Dashboard — manage students, attendance, and reports." />
+  <meta name="description" content="SmartDrishti Dashboard — manage students, attendance, and reports." />
   <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="css/cglass.css" />
 </head>
 
 <body>
@@ -244,6 +245,8 @@
 
   <script src="scripts/api.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+  <script src="scripts/cglass-bg.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     if (!requireAuth()) { /* redirects */ }
@@ -315,7 +318,7 @@
                 position: 'top',
                 align: 'end',
                 labels: {
-                  font: { family: "'Inter', sans-serif", size: 13, weight: '500' },
+                  font: { family: "'Plus Jakarta Sans', sans-serif", size: 13, weight: '500' },
                   usePointStyle: true,
                   pointStyle: 'circle',
                   boxWidth: 8,
@@ -333,8 +336,8 @@
                 padding: 14,
                 boxPadding: 8,
                 usePointStyle: true,
-                titleFont: { family: "'Inter', sans-serif", size: 13, weight: '600' },
-                bodyFont: { family: "'Inter', sans-serif", size: 13, weight: '500' },
+                titleFont: { family: "'Plus Jakarta Sans', sans-serif", size: 13, weight: '600' },
+                bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 13, weight: '500' },
                 cornerRadius: 10,
                 caretSize: 6,
                 callbacks: {
@@ -350,7 +353,7 @@
             scales: {
               x: {
                 grid: { display: false, drawBorder: false },
-                ticks: { font: { family: "'Inter', sans-serif", size: 12, weight: '500' }, color: '#666' }
+                ticks: { font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '500' }, color: '#666' }
               },
               y: {
                 beginAtZero: true,
@@ -360,7 +363,7 @@
                 },
                 ticks: {
                   stepSize: 1,
-                  font: { family: "'Inter', sans-serif", size: 12 },
+                  font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 },
                   color: '#888',
                   padding: 10
                 },

@@ -106,10 +106,12 @@ async def list_attendance(
     db: AsyncSession,
     page: int = 1,
     limit: int = 50,
-    date_filter: date | None = None,
+    start_date: date | None = None,
+    end_date: date | None = None,
     subject_filter: str | None = None,
     student_id_filter: uuid.UUID | str | None = None,
     class_name_filter: str | None = None,
+    year_filter: str | None = None,
 ) -> tuple[list[dict], int]:
     """List attendance records with optional filters."""
     # OUTER JOIN: keeps rows where student_id IS NULL (unknown faces)
@@ -119,14 +121,18 @@ async def list_attendance(
     )
 
     conditions = []
-    if date_filter:
-        conditions.append(Attendance.date == date_filter)
+    if start_date:
+        conditions.append(Attendance.date >= start_date)
+    if end_date:
+        conditions.append(Attendance.date <= end_date)
     if subject_filter:
         conditions.append(Attendance.subject == subject_filter)
     if student_id_filter:
         conditions.append(Attendance.student_id == str(student_id_filter))
     if class_name_filter:
         conditions.append(Attendance.class_name == class_name_filter)
+    if year_filter:
+        conditions.append(Student.year == year_filter)
 
     for cond in conditions:
         query = query.where(cond)

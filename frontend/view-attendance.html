@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>View Attendance — Drishti</title>
+  <title>View Attendance — SmartDrishti</title>
   <meta name="description" content="View, edit and export attendance records grouped by class." />
   <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="css/cglass.css" />
   <style>
     /* ── Group headers ─────────────────────────────────────── */
     .group-header {
@@ -149,6 +150,202 @@
     td {
       vertical-align: middle;
     }
+
+    .quick-filter-btn {
+      transition: all 0.2s;
+      background-color: #f3f4f6;
+      /* Light gray shade */
+      border: 1px solid #e5e7eb;
+      color: #000000;
+      /* Black text */
+    }
+
+    .quick-filter-btn:hover {
+      background-color: #e5e7eb;
+    }
+
+    .quick-filter-btn.active {
+      background: var(--chamoisee, #7EACB5);
+      color: #fff;
+      border-color: var(--chamoisee, #7EACB5);
+    }
+
+    /* ── Drill-down: Department cards ───────────────────────── */
+    .dept-card {
+      border: 1px solid rgba(126, 172, 181, 0.2);
+      border-radius: 24px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .dept-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 32px 24px;
+      background: linear-gradient(180deg, rgba(126, 172, 181, 0.12) 0%, transparent 100%);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .dept-header:hover {
+      background: rgba(126, 172, 181, 0.18);
+    }
+
+    .dept-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--chamoisee, #7EACB5);
+      letter-spacing: -0.02em;
+    }
+
+    .dept-badge {
+      font-size: 0.85rem;
+      color: var(--platinum-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .dept-body {
+      padding: 24px;
+      background: transparent;
+    }
+
+    /* ── Drill-down: Department & Class cards (Big & Premium) ─── */
+    .class-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .class-card-big {
+      background: var(--card-bg, rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(126, 172, 181, 0.15);
+      border-radius: 20px;
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(10px);
+    }
+
+    .class-card-big::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--chamoisee, #7EACB5), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .class-card-big:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: var(--chamoisee, #7EACB5);
+      background: rgba(126, 172, 181, 0.08);
+      box-shadow: 0 20px 40px rgba(126, 172, 181, 0.15);
+    }
+
+    .class-card-big:hover::before {
+      opacity: 1;
+    }
+
+    .class-card-big .card-icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(126, 172, 181, 0.1);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--chamoisee, #7EACB5);
+      transition: all 0.4s;
+      box-shadow: inset 0 0 10px rgba(126, 172, 181, 0.1);
+    }
+
+    .class-card-big:hover .card-icon {
+      background: var(--chamoisee, #7EACB5);
+      color: #fff;
+      transform: scale(1.1) rotate(8deg);
+      box-shadow: 0 8px 15px rgba(126, 172, 181, 0.3);
+    }
+
+    .class-card-big .class-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--platinum, #2c3e50);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .class-card-big .class-badge {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--platinum-muted, #6B7280);
+      background: rgba(126, 172, 181, 0.08);
+      padding: 6px 16px;
+      border-radius: 30px;
+      border: 1px solid rgba(126, 172, 181, 0.1);
+      transition: all 0.3s;
+    }
+
+    .class-card-big:hover .class-badge {
+      background: rgba(126, 172, 181, 0.15);
+      color: var(--chamoisee, #7EACB5);
+    }
+
+    /* ── Chevron ─────────────────────────────────────────────── */
+    .chevron-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--chamoisee, #7EACB5);
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    /* ── Year sub-sections ───────────────────────────────────── */
+    .year-section {
+      margin-bottom: 20px;
+      border: 1px solid rgba(126, 172, 181, 0.15);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .year-section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: linear-gradient(90deg, rgba(126, 172, 181, 0.09) 0%, transparent 100%);
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(126, 172, 181, 0.1);
+      color: var(--platinum);
+    }
+
+    .year-badge {
+      font-size: 0.75rem;
+      color: var(--platinum-muted);
+      background: rgba(126, 172, 181, 0.1);
+      padding: 2px 10px;
+      border-radius: 10px;
+      margin-left: auto;
+    }
   </style>
 </head>
 
@@ -167,7 +364,7 @@
           stroke-linecap="round" />
         <circle cx="16" cy="12" r="2" fill="currentColor" />
       </svg>
-      Drishti
+      SmartDrishti
     </a>
     <div class="nav-links" id="nav-links">
       <a href="dashboard.html">Dashboard</a>
@@ -215,8 +412,14 @@
             </select>
           </div>
           <div class="filter-group">
-            <label>Date</label>
-            <input class="form-input" type="date" id="filter-date" onchange="loadAttendance()" />
+            <label>From Date</label>
+            <input class="form-input" type="date" id="filter-start-date"
+              onchange="clearQuickFilters(); loadAttendance()" />
+          </div>
+          <div class="filter-group">
+            <label>To Date</label>
+            <input class="form-input" type="date" id="filter-end-date"
+              onchange="clearQuickFilters(); loadAttendance()" />
           </div>
           <div class="filter-group">
             <label>Subject</label>
@@ -232,9 +435,48 @@
               <option value="Machine Learning">Machine Learning</option>
             </select>
           </div>
+          <div class="filter-group">
+            <label>Department</label>
+            <select class="form-select" id="filter-dept" onchange="loadAttendance()">
+              <option value="">All Departments</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Mechanical">Mechanical</option>
+              <option value="Civil">Civil</option>
+            </select>
+          </div>
           <div class="filter-group" style="flex: 0 0 auto;">
             <label>&nbsp;</label>
             <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear</button>
+          </div>
+
+          <!-- Flex break to force new line -->
+          <div style="flex-basis: 100%; height: 0; margin: 0;"></div>
+
+          <div
+            style="display: flex; gap: 8px; align-items: center; width: 100%; padding-top: 8px; border-top: 1px solid rgba(126, 172, 181, 0.15); flex-wrap: wrap;">
+            <span
+              style="font-size: 0.78rem; color: var(--platinum-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; margin-right: 8px;">Date
+              Quick Filters:</span>
+            <button class="btn btn-ghost btn-sm quick-filter-btn" id="btn-weekly"
+              onclick="setQuickFilter('weekly')">Weekly</button>
+            <button class="btn btn-ghost btn-sm quick-filter-btn" id="btn-monthly"
+              onclick="setQuickFilter('monthly')">Monthly</button>
+            <button class="btn btn-ghost btn-sm quick-filter-btn" id="btn-yearly"
+              onclick="setQuickFilter('yearly')">Yearly</button>
+
+            <span
+              style="font-size: 0.78rem; color: var(--platinum-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; margin-left: 16px; margin-right: 8px;">Year
+              Filters:</span>
+            <button class="btn btn-ghost btn-sm quick-filter-btn year-filter-btn" id="btn-year-FY"
+              onclick="setYearFilter('FY')">FY</button>
+            <button class="btn btn-ghost btn-sm quick-filter-btn year-filter-btn" id="btn-year-SY"
+              onclick="setYearFilter('SY')">SY</button>
+            <button class="btn btn-ghost btn-sm quick-filter-btn year-filter-btn" id="btn-year-TY"
+              onclick="setYearFilter('TY')">TY</button>
+            <button class="btn btn-ghost btn-sm quick-filter-btn year-filter-btn" id="btn-year-LY"
+              onclick="setYearFilter('LY')">LY</button>
+            <input type="hidden" id="filter-year" value="" />
           </div>
         </div>
 
@@ -268,6 +510,8 @@
 
   <script src="scripts/api.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+  <script src="scripts/cglass-bg.js"></script>
   <script>
     if (!requireAuth()) { /* redirect */ }
 
@@ -304,6 +548,18 @@
       }
     }
 
+    // ── Helpers: derive department & year label ────────────────────────────
+    const DEPT_MAP = { CSE: 'Computer Science', ECE: 'Electronics', ME: 'Mechanical', CE: 'Civil' };
+    const YEAR_LABEL = { FY: 'First Year (FY)', SY: 'Second Year (SY)', TY: 'Third Year (TY)', LY: 'Last Year (LY)' };
+    const YEAR_ORDER = ['FY', 'SY', 'TY', 'LY', 'Unspecified'];
+    const YEAR_EMOJI = { FY: '🟢', SY: '🔵', TY: '🟠', LY: '🔴', Unspecified: '⚪' };
+
+    function deptFromClass(cls) {
+      if (!cls || cls === 'Unknown') return 'Unknown Faces';
+      const prefix = cls.split('-')[0].toUpperCase();
+      return DEPT_MAP[prefix] || 'Other';
+    }
+
     // ── Load & render attendance ─────────────────────────────
     async function loadAttendance(page = 1) {
       currentPage = page;
@@ -320,180 +576,168 @@
       pagCont.style.display = 'none';
 
       const classFilter = document.getElementById('filter-class').value || undefined;
-      const dateFilter = document.getElementById('filter-date').value || undefined;
+      const deptFilter = document.getElementById('filter-dept').value || undefined;
+      const startDateFilter = document.getElementById('filter-start-date').value || undefined;
+      const endDateFilter = document.getElementById('filter-end-date').value || undefined;
       const subjectFilter = document.getElementById('filter-subject').value || undefined;
+      const yearFilter = document.getElementById('filter-year').value || undefined;
+
+      // ── NEW: If "All Classes" is selected and no other filters, show the Grid View ──
+      if (!classFilter && !deptFilter && !startDateFilter && !endDateFilter && !subjectFilter && !yearFilter && page === 1) {
+        return renderClassGrid();
+      }
 
       try {
         const data = await AttendanceAPI.list(page, pageSize, {
           class_name: classFilter,
-          date: dateFilter,
+          startDate: startDateFilter,
+          endDate: endDateFilter,
           subject: subjectFilter,
+          year: yearFilter,
         });
         const items = data.items || [];
         const total = data.total || 0;
 
-        if (!items.length) {
+        // Note: Filter by department client-side if needed since API might not support it yet
+        let filteredItems = items;
+        if (deptFilter) {
+          filteredItems = items.filter(it => deptFromClass(it.class_name) === deptFilter);
+        }
+
+        if (!filteredItems.length) {
           resultsArea.innerHTML = '';
           emptyState.style.display = 'block';
           document.getElementById('empty-msg').textContent =
             classFilter
               ? `No attendance records for class "${classFilter}".`
-              : 'No records match your filters.';
+              : (deptFilter ? `No records for department "${deptFilter}".` : 'No records match your filters.');
           return;
         }
 
         emptyState.style.display = 'none';
         pagCont.style.display = 'flex';
 
-        // ── Group by class_name -> date -> subject ────────────────────────────
-        const groups = {};
-        for (const item of items) {
+        // ── Group: cls → sub → yr → dt → [records] ──────────────────
+        const classGroups = {};
+        for (const item of filteredItems) {
           const cls = item.class_name || 'Unknown';
-          const dt = item.date || 'No Date';
           const sub = item.subject || 'Unknown Subject';
+          const yr = item.year || yearFilter || 'Unspecified';
+          const dt = item.date || 'No Date';
 
-          if (!groups[cls]) groups[cls] = {};
-          if (!groups[cls][dt]) groups[cls][dt] = {};
-          if (!groups[cls][dt][sub]) groups[cls][dt][sub] = [];
-
-          groups[cls][dt][sub].push(item);
+          if (!classGroups[cls]) classGroups[cls] = {};
+          if (!classGroups[cls][sub]) classGroups[cls][sub] = {};
+          if (!classGroups[cls][sub][yr]) classGroups[cls][sub][yr] = {};
+          if (!classGroups[cls][sub][yr][dt]) classGroups[cls][sub][yr][dt] = [];
+          classGroups[cls][sub][yr][dt].push(item);
         }
 
-        const sortedClasses = Object.keys(groups).sort((a, b) => {
+        const sortedClasses = Object.keys(classGroups).sort((a, b) => {
           if (a === 'Unknown') return 1;
           if (b === 'Unknown') return -1;
           return a.localeCompare(b);
         });
 
-        // ── Build HTML ─────────────────────────────────────
+        // ── Build HTML ─────────────────────────────────────────────────────────
         let html = '';
         let rowNum = (page - 1) * pageSize + 1;
+        let clsIdx = 0;
 
         for (const cls of sortedClasses) {
-          const isUnknown = cls === 'Unknown';
-
-          // Calculate total records in this class
-          let classTotal = 0;
-          for (const dt in groups[cls]) {
-            for (const sub in groups[cls][dt]) {
-              classTotal += groups[cls][dt][sub].length;
-            }
-          }
+          const clsId = `cls-${clsIdx++}`;
+          const subjects = Object.keys(classGroups[cls]).sort();
+          let clsTotal = 0;
+          for (const s of subjects)
+            for (const y of Object.keys(classGroups[cls][s]))
+              for (const d of Object.keys(classGroups[cls][s][y]))
+                clsTotal += classGroups[cls][s][y][d].length;
 
           html += `
-            <div class="group-section${isUnknown ? ' group-unknown' : ''}" style="background: rgba(152,126,93,0.06); border: 1px solid rgba(152,126,93,0.15); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 40px; box-shadow: 0 4px 16px rgba(152,126,93,0.04);">
-              <div class="group-header" style="background: linear-gradient(90deg, rgba(152,126,93,0.12) 0%, transparent 100%); border-left: 4px solid var(--chamoisee); padding: 16px 20px; border-radius: 6px; margin-top: 0;">
-                <h3 style="margin: 0; font-size: 1.15rem; color: var(--chamoisee);">${isUnknown ? '❓ Unknown Faces' : '🎓 Class: ' + cls}</h3>
-                <span class="group-count" style="margin-left: auto; font-weight: 600; font-size: 0.9rem;">${classTotal} record${classTotal !== 1 ? 's' : ''}</span>
+            <div class="class-card-big" style="margin-bottom: 32px; padding: 40px; cursor: default; transform: none; box-shadow: 0 8px 30px rgba(0,0,0,0.06); border: 1px solid rgba(126,172,181,0.2);">
+              <div class="class-header" style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 30px;">
+                <span class="class-name" style="font-size: 2rem; font-weight: 800; color: var(--chamoisee);">${cls}</span>
+                <span class="class-badge" style="font-size: 1rem; padding: 6px 20px;">${clsTotal} Attendance Records</span>
               </div>
+              <div class="class-body" style="width: 100%;">
           `;
 
-          const sortedDates = Object.keys(groups[cls]).sort().reverse(); // Newest first
+          let subIdx = 0;
+          for (const sub of subjects) {
+            const subId = `sub-${clsId}-${subIdx++}`;
+            const years = Object.keys(classGroups[cls][sub]).sort();
+            let subTotal = 0;
+            for (const y of years)
+              for (const d of Object.keys(classGroups[cls][sub][y]))
+                subTotal += classGroups[cls][sub][y][d].length;
 
-          for (const dt of sortedDates) {
-            const sortedSubjects = Object.keys(groups[cls][dt]).sort();
+            html += `
+              <div class="subject-section" style="margin-bottom: 16px; border: 1px solid rgba(126,172,181,0.15); border-radius: 12px; overflow: hidden;">
+                <div class="subject-header" onclick="toggleDrilldown('${subId}')" style="display: flex; align-items: center; gap: 12px; padding: 14px 20px; background: linear-gradient(90deg, rgba(126,172,181,0.08) 0%, transparent 100%); cursor: pointer; user-select: none;">
+                  <svg class="chevron-icon" id="chev-${subId}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;"><polyline points="6 9 12 15 18 9"/></svg>
+                  <strong style="font-size: 1.1rem; color: var(--platinum);">Subject: ${sub}</strong>
+                  <span class="year-badge" style="margin-left: auto;">${subTotal} records</span>
+                </div>
+                <div class="subject-body" id="${subId}" style="display: none; padding: 20px; background: rgba(255,255,255,0.01);">
+            `;
 
-            for (const sub of sortedSubjects) {
-              const records = groups[cls][dt][sub];
+            for (const yr of years) {
+              const yrLabel = YEAR_LABEL[yr] || (yr === 'Unspecified' ? 'Year Not Specified' : yr);
+              const sortedDates = Object.keys(classGroups[cls][sub][yr]).sort().reverse();
 
-              html += `
-                <div class="subgroup-section" style="margin-left: 20px; margin-bottom: 24px;">
-                  <div class="subgroup-header" style="display: flex; align-items: center; gap: 10px; margin: 15px 0 12px 0;">
-                    <h5 style="margin: 0; font-size: 1rem; color: var(--platinum); border-left: 3px solid var(--success); padding-left: 10px;">
-                      📅 <span style="font-weight: 600;">${dt}</span> &nbsp;&nbsp;|&nbsp;&nbsp; 📚 <span style="font-weight: 600;">${sub}</span>
-                    </h5>
-                    <span style="font-size: 0.8rem; color: var(--platinum-muted); background: var(--surface-hover); padding: 3px 10px; border-radius: 12px; font-weight: 500;">${records.length}</span>
-                  </div>
-                  <div class="table-wrapper">
-                    <table class="data-table">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Name</th>
-                          <th>Roll No.</th>
-                          <th>Class</th>
-                          <th>Subject</th>
-                          <th>Date</th>
-                          <th>Time</th>
-                          <th>Status</th>
-                          <th>Source</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-              `;
+              for (const dt of sortedDates) {
+                const records = classGroups[cls][sub][yr][dt];
+                const yrInline = yr !== 'Unspecified' ? ` &nbsp;|&nbsp; ${yrLabel}` : '';
 
-              for (const item of records) {
-                const id = item.id;
                 html += `
-                  <tr id="row-${id}">
-                    <td style="color:var(--platinum-muted);font-size:.8rem;">${rowNum++}</td>
-
-                    <!-- Name -->
-                    <td>
-                      <input class="edit-input" id="name-${id}"
-                        value="${esc(item.name || '')}"
-                        placeholder="Name" />
-                    </td>
-
-                    <!-- Roll number -->
-                    <td>
-                      <input class="edit-input" id="roll-${id}"
-                        value="${esc(item.roll_number === 'UNKNOWN' ? '' : (item.roll_number || ''))}"
-                        placeholder="Roll no." style="min-width:70px;" />
-                    </td>
-
-                    <!-- Class name -->
-                    <td>
-                      <input class="edit-input" id="class-${id}"
-                        value="${esc(item.class_name === 'Unknown' ? '' : (item.class_name || ''))}"
-                        placeholder="Class" style="min-width:60px;" />
-                    </td>
-
-                    <!-- Subject -->
-                    <td>
-                      <input class="edit-input" id="subject-${id}"
-                        value="${esc(item.subject || '')}"
-                        placeholder="Subject" style="min-width:90px;" />
-                    </td>
-
-                    <!-- Date (read-only) -->
-                    <td style="color:var(--platinum-muted);font-size:.82rem;">
-                      ${item.date || 'N/A'}
-                    </td>
-
-                    <!-- Time (read-only display; time editing is optional) -->
-                    <td style="color:var(--platinum-muted);font-size:.82rem;">
-                      ${formatTime(item.time)}
-                    </td>
-
-                    <!-- Status -->
-                    <td>
-                      <select class="edit-select" id="status-${id}">
-                        <option value="present" ${item.status === 'present' ? 'selected' : ''}>Present</option>
-                        <option value="absent"  ${item.status === 'absent' ? 'selected' : ''}>Absent</option>
-                        <option value="late"    ${item.status === 'late' ? 'selected' : ''}>Late</option>
-                      </select>
-                    </td>
-
-                    <!-- Source (read-only) -->
-                    <td><span class="text-muted" style="font-size:.8rem;">${item.source || 'auto'}</span></td>
-
-                    <!-- Actions -->
-                    <td>
-                      <div style="display: flex; gap: 6px;">
-                        <button class="btn-save-row" id="save-${id}" onclick="saveRow('${id}')">Save</button>
-                        <button class="btn-delete-row" id="delete-${id}" onclick="deleteRow('${id}')">Delete</button>
-                      </div>
-                    </td>
-                  </tr>
+                  <div class="subgroup-section" style="margin-bottom: 24px;">
+                    <div class="subgroup-header" style="display: flex; align-items: center; gap: 10px; margin: 0 0 12px 0;">
+                      <h5 style="margin: 0; font-size: 0.95rem; color: var(--platinum); border-left: 3px solid var(--chamoisee); padding-left: 10px;">
+                        <span style="font-weight:700;">${dt}</span>${yrInline}
+                      </h5>
+                      <span style="font-size:0.75rem;color:var(--platinum-muted);background:rgba(126,172,181,0.1);padding:2px 8px;border-radius:10px;font-weight:600;">${records.length}</span>
+                    </div>
+                    <div class="table-wrapper">
+                      <table class="data-table">
+                        <thead>
+                          <tr>
+                            <th>#</th><th>Name</th><th>Roll No.</th><th>Status</th><th>Time</th><th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
                 `;
-              }
 
-              html += `</tbody></table></div></div>`;
+                for (const item of records) {
+                  const id = item.id;
+                  html += `
+                    <tr id="row-${id}">
+                      <td style="color:var(--platinum-muted);font-size:.8rem;">${rowNum++}</td>
+                      <td><input class="edit-input" id="name-${id}" value="${esc(item.name || '')}" placeholder="Name" /></td>
+                      <td><input class="edit-input" id="roll-${id}" value="${esc(item.roll_number === 'UNKNOWN' ? '' : (item.roll_number || ''))}" placeholder="Roll no." style="min-width:70px;" /></td>
+                      <td>
+                        <select class="edit-select" id="status-${id}">
+                          <option value="present" ${item.status === 'present' ? 'selected' : ''}>Present</option>
+                          <option value="absent"  ${item.status === 'absent' ? 'selected' : ''}>Absent</option>
+                          <option value="late"    ${item.status === 'late' ? 'selected' : ''}>Late</option>
+                        </select>
+                        <input type="hidden" id="class-${id}" value="${esc(item.class_name || '')}" />
+                        <input type="hidden" id="subject-${id}" value="${esc(item.subject || '')}" />
+                      </td>
+                      <td style="color:var(--platinum-muted);font-size:.82rem;">${formatTime(item.time)}</td>
+                      <td>
+                        <div style="display:flex;gap:6px;">
+                          <button class="btn-save-row"   id="save-${id}"   onclick="saveRow('${id}')">Save</button>
+                          <button class="btn-delete-row" id="delete-${id}" onclick="deleteRow('${id}')">Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  `;
+                }
+                html += `</tbody></table></div></div>`; // end subgroup
+              }
             }
+            html += `</div></div>`; // end subject-body, subject-section
           }
-          html += `</div>`;
+          html += `</div></div>`; // end class-body, class-card-big
         }
 
         resultsArea.innerHTML = html;
@@ -604,30 +848,134 @@
       }
     }
 
-    // ── Delete a single row ────────────────────────────────────
-    async function deleteRow(id) {
-      if (!confirm("Are you sure you want to delete this record? This cannot be undone.")) return;
+    // ── NEW: Render Class Grid ───────────────────────────────
+    async function renderClassGrid() {
+      const resultsArea = document.getElementById('results-area');
+      const pagCont = document.getElementById('pagination-container');
+      const emptyState = document.getElementById('empty-state');
 
-      const btn = document.getElementById(`delete-${id}`);
-      const row = document.getElementById(`row-${id}`);
-
-      btn.textContent = '...';
-      btn.classList.add('deleting');
+      resultsArea.innerHTML = `
+        <div style="text-align:center;padding:60px 0;">
+          <div class="spinner" style="margin:0 auto;"></div>
+          <p class="text-muted" style="margin-top:12px;font-size:.85rem;">Loading available classes…</p>
+        </div>`;
+      pagCont.style.display = 'none';
+      emptyState.style.display = 'none';
 
       try {
-        await AttendanceAPI.delete(id);
-        row.style.opacity = '0';
-        row.style.transition = 'opacity 0.3s ease';
-        setTimeout(() => {
-          row.remove();
-          showToast('Record deleted', 'success');
-        }, 300);
+        const classes = await AttendanceAPI.getClasses();
+        if (!classes || !classes.length) {
+          resultsArea.innerHTML = '';
+          emptyState.style.display = 'block';
+          document.getElementById('empty-msg').textContent = 'No classes with attendance records found.';
+          return;
+        }
+
+        // Group by department
+        const groupedByDept = {};
+        for (const cls of classes) {
+          const dept = deptFromClass(cls);
+          if (!groupedByDept[dept]) groupedByDept[dept] = [];
+          groupedByDept[dept].push(cls);
+        }
+
+        const sortedDepts = Object.keys(groupedByDept).sort((a, b) => {
+          if (a === 'Unknown Faces') return 1;
+          if (b === 'Unknown Faces') return -1;
+          return a.localeCompare(b);
+        });
+
+        let html = `
+          <div style="margin-bottom: 32px; text-align: center;" class="fade-in-up">
+            <h3 style="font-size: 1.5rem; color: var(--platinum); margin-bottom: 8px;">Select a Class</h3>
+            <p style="color: var(--platinum-muted);">All classes with attendance records are grouped by department.</p>
+          </div>`;
+
+        let deptIdx = 0;
+        for (const dept of sortedDepts) {
+          const deptId = `grid-dept-${deptIdx++}`;
+          const deptClasses = groupedByDept[dept].filter(c => c !== 'Unknown').sort();
+
+          if (deptClasses.length === 0 && dept !== 'Unknown Faces') continue;
+
+          html += `
+            <div class="dept-card" style="margin-bottom: 24px;">
+              <div class="dept-header" onclick="toggleDrilldown('${deptId}')">
+                <svg class="chevron-icon" id="chev-${deptId}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                <span class="dept-name" style="font-size: 1.3rem;">${dept}</span>
+                <span class="dept-badge">${deptClasses.length || (dept === 'Unknown Faces' ? 1 : 0)} class${deptClasses.length !== 1 ? 'es' : ''}</span>
+              </div>
+              <div class="dept-body" id="${deptId}" style="display: none; padding: 24px;">
+                <div class="class-grid">`;
+
+          for (const cls of deptClasses) {
+            html += `
+              <div class="class-card-big fade-in-up" onclick="selectClass('${esc(cls)}')">
+                <div class="card-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                  </svg>
+                </div>
+                <h3 class="class-name">${esc(cls)}</h3>
+                <span class="class-badge">View Records</span>
+              </div>
+            `;
+          }
+
+          if (dept === 'Unknown Faces' && groupedByDept[dept].includes('Unknown')) {
+            html += `
+              <div class="class-card-big fade-in-up" onclick="selectClass('Unknown')" style="border-style: dashed; opacity: 0.8;">
+                <div class="card-icon" style="background: rgba(245, 228, 200, 0.1); color: var(--surface-hover, #F5E4C8);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                </div>
+                <h3 class="class-name" style="color: var(--surface-hover, #F5E4C8);">Unknown Faces</h3>
+                <span class="class-badge">Review Unidentified</span>
+              </div>
+            `;
+          }
+
+          html += `</div></div></div>`;
+        }
+
+        resultsArea.innerHTML = html;
       } catch (err) {
-        console.error(`[deleteRow] id=${id} error:`, err.message);
-        btn.textContent = 'Delete';
-        btn.classList.remove('deleting');
-        showToast(err.message || 'Delete failed', 'error');
+        resultsArea.innerHTML = `
+          <div style="text-align:center;padding:60px 0;color:var(--danger);">
+            <strong>Failed to load classes:</strong> ${err.message}
+          </div>`;
       }
+    }
+
+    function selectClass(cls) {
+      document.getElementById('filter-class').value = cls;
+
+      // Also sync Department filter for consistency
+      const dept = deptFromClass(cls);
+      const deptSelect = document.getElementById('filter-dept');
+      if (dept && dept !== 'Unknown Faces') {
+        const options = Array.from(deptSelect.options);
+        if (options.some(o => o.value === dept)) {
+          deptSelect.value = dept;
+        } else {
+          deptSelect.value = "";
+        }
+      } else {
+        deptSelect.value = "";
+      }
+
+      loadAttendance(1);
+    }
+
+    // ── Drill-down toggle ────────────────────────────────────
+    function toggleDrilldown(id) {
+      const body = document.getElementById(id);
+      const chev = document.getElementById('chev-' + id);
+      const isOpen = body.style.display !== 'none';
+      body.style.display = isOpen ? 'none' : 'block';
+      if (chev) chev.style.transform = isOpen ? '' : 'rotate(-180deg)';
     }
 
     // ── Helpers ──────────────────────────────────────────────
@@ -637,10 +985,63 @@
         .replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
+    function formatDateStr(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function setQuickFilter(type) {
+      const today = new Date();
+      let start = new Date(today);
+      let end = new Date(today);
+
+      if (type === 'weekly') {
+        start.setDate(today.getDate() - 7);
+      } else if (type === 'monthly') {
+        start.setDate(today.getDate() - 30);
+      } else if (type === 'yearly') {
+        start.setFullYear(today.getFullYear() - 1);
+      }
+
+      document.getElementById('filter-start-date').value = formatDateStr(start);
+      document.getElementById('filter-end-date').value = formatDateStr(end);
+
+      clearQuickFilters();
+      document.getElementById(`btn-${type}`).classList.add('active');
+      loadAttendance(1);
+    }
+
+    function clearQuickFilters() {
+      document.querySelectorAll('#btn-weekly, #btn-monthly, #btn-yearly').forEach(btn => btn.classList.remove('active'));
+    }
+
+    function setYearFilter(year) {
+      clearYearFilters();
+      const currentYear = document.getElementById('filter-year').value;
+      if (currentYear === year) {
+        document.getElementById('filter-year').value = '';
+      } else {
+        document.getElementById('filter-year').value = year;
+        document.getElementById(`btn-year-${year}`).classList.add('active');
+      }
+      loadAttendance(1);
+    }
+
+    function clearYearFilters() {
+      document.querySelectorAll('.year-filter-btn').forEach(btn => btn.classList.remove('active'));
+    }
+
     function clearFilters() {
       document.getElementById('filter-class').value = '';
-      document.getElementById('filter-date').value = '';
+      document.getElementById('filter-dept').value = '';
+      document.getElementById('filter-start-date').value = '';
+      document.getElementById('filter-end-date').value = '';
       document.getElementById('filter-subject').value = '';
+      document.getElementById('filter-year').value = '';
+      clearYearFilters();
+      clearQuickFilters();
       loadAttendance(1);
     }
 
@@ -651,13 +1052,14 @@
       try {
         // Pass exactly the same filters currently active on the page
         const classVal = document.getElementById('filter-class').value || undefined;
-        const dateVal = document.getElementById('filter-date').value || undefined;
+        const startVal = document.getElementById('filter-start-date').value || undefined;
+        const endVal = document.getElementById('filter-end-date').value || undefined;
         const subjectVal = document.getElementById('filter-subject').value || undefined;
 
         const filters = {
           class_name: classVal,
-          startDate: dateVal,   // single-date filter maps to start_date
-          endDate: dateVal,   // same date → exact day export
+          startDate: startVal,
+          endDate: endVal,
           subject: subjectVal,
           format: 'xlsx',
         };

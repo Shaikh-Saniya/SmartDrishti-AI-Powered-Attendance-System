@@ -34,11 +34,12 @@ async def create_student(
     Raises:
         BadRequestException: If a student with the same roll_number already exists in the same class.
     """
-    # Check for duplicate roll_number within the same class (composite uniqueness)
+    # Check for duplicate roll_number within the same class among ACTIVE students
     existing = await db.execute(
         select(Student).where(
             Student.roll_number == data.roll_number,
             Student.class_ == data.class_name,
+            Student.is_active == True,
         )
     )
     if existing.scalar_one_or_none() is not None:
@@ -50,6 +51,7 @@ async def create_student(
         roll_number=data.roll_number,
         name=data.name,
         class_=data.class_name,  # Map class_name to class_ (class is a reserved keyword)
+        year=data.year,
         department=data.department,
         email=data.email,
         phone=data.phone,

@@ -7,7 +7,7 @@ BASE = 'http://localhost:8000/api/v1'
 def main():
     print("Fetching a test face image...")
     import shutil
-    shutil.copy(r'c:\Drishti\backend\uploads\student_images\8929d546-8f03-44eb-a0a8-31b3a9cef9d6_20260414_183555_136561ef.jpg', 'test_face.jpg')
+    shutil.copy(r'C:\Dristhi-main\backend\uploads\student_images\0f2c656d-02f8-4a14-9d6d-4e00de82da4e_20260426_162505_b0097d89.jpg', 'test_face.jpg')
         
     print("Logging in...")
     login_resp = requests.post(f'{BASE}/auth/login', data={'username': 'admin@example.com', 'password': 'admin123'})

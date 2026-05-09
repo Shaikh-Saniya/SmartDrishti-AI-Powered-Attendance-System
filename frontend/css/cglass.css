@@ -1,0 +1,594 @@
+/*
+  SmartDrishti — CGlass Theme
+  Crystal Glass with Lightning Highlights & Golden Refraction
+  Light theme preserved • Golden palette • Crystal depth
+  ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Design Tokens ──────────────────────────────────────── */
+:root {
+  /* Brand palette (light+golden preserved) */
+  --cg-gold: #987E5D;
+  --cg-gold-light: #C9A97A;
+  --cg-gold-bright: #F0C060;
+  --cg-teal: #7EACB5;
+  --cg-text: #1A1A1A;
+  --cg-text-muted: #5A5A6A;
+  --cg-text-light: rgba(26, 26, 26, 0.65);
+
+  /* Crystal glass surfaces — very transparent, ultra-clean */
+  --cg-surface: rgba(255, 255, 255, 0.08);
+  --cg-surface-hover: rgba(255, 255, 255, 0.15);
+  --cg-surface-strong: rgba(255, 255, 255, 0.18);
+
+  /* Border & highlights — subtler, more transparent */
+  --cg-border: rgba(255, 255, 255, 0.35);
+  --cg-border-gold: rgba(152, 126, 93, 0.18);
+  --cg-lightning: rgba(212, 175, 120, 0.60);
+  --cg-lightning-dim: rgba(200, 165, 110, 0.25);
+
+  /* Backdrop */
+  --cg-blur: blur(32px) saturate(200%) contrast(108%);
+  --cg-blur-heavy: blur(48px) saturate(220%);
+
+  /* Shadows — softer, lighter */
+  --cg-shadow: 0 6px 32px rgba(152, 126, 93, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --cg-shadow-lift: 0 16px 48px rgba(152, 126, 93, 0.14), 0 4px 14px rgba(0, 0, 0, 0.06);
+  --cg-shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+
+  /* Radii */
+  --cg-radius-xl: 28px;
+  --cg-radius-lg: 20px;
+  --cg-radius-md: 14px;
+  --cg-radius-sm: 8px;
+
+  /* Timing */
+  --cg-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --cg-ease2: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Global Base Override ───────────────────────────────── */
+body {
+  background: transparent !important;
+  color: var(--cg-text) !important;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+}
+
+label,
+p,
+span,
+td,
+th,
+li,
+a,
+button,
+input,
+select,
+textarea {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+}
+
+/* ── Mesh Gradient Background ───────────────────────────── */
+#cglass-bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -10;
+  pointer-events: none;
+}
+
+/* CSS fallback gradient — pure white background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -11;
+  background: #ffffff;
+}
+
+@keyframes bg-breathe {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ── SVG Refraction Filter ──────────────────────────────── */
+#cglass-svg-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* ── Crystal Panel ──────────────────────────────────────── */
+.cglass-panel {
+  position: relative;
+  background: var(--cg-surface);
+  backdrop-filter: var(--cg-blur);
+  -webkit-backdrop-filter: var(--cg-blur);
+  border-radius: var(--cg-radius-xl);
+  border: 1px solid var(--cg-border);
+  box-shadow: var(--cg-shadow), var(--cg-shadow-inner);
+  overflow: hidden;
+  transition: all 0.35s var(--cg-ease2);
+}
+
+/* Top-edge lightning highlight */
+.cglass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1.5px;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--cg-lightning-dim) 20%,
+      var(--cg-lightning) 50%,
+      var(--cg-lightning-dim) 80%,
+      transparent 100%);
+  border-radius: 999px;
+  animation: lightning-pulse 4s ease-in-out infinite;
+}
+
+/* Left-edge refraction glint */
+.cglass-panel::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 0;
+  width: 1.5px;
+  background: linear-gradient(180deg,
+      transparent 0%,
+      var(--cg-lightning-dim) 30%,
+      rgba(255, 255, 255, 0.8) 50%,
+      var(--cg-lightning-dim) 70%,
+      transparent 100%);
+  border-radius: 999px;
+}
+
+@keyframes lightning-pulse {
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 4px var(--cg-gold-bright));
+  }
+}
+
+/* ── Hover-lift panel ───────────────────────────────────── */
+.cglass-panel:hover {
+  background: var(--cg-surface-hover);
+  box-shadow: var(--cg-shadow-lift), var(--cg-shadow-inner);
+  border-color: var(--cg-border-gold);
+  transform: translateY(-3px);
+}
+
+/* ── Interactive Card (clickable) ───────────────────────── */
+.cglass-card {
+  position: relative;
+  background: var(--cg-surface);
+  backdrop-filter: var(--cg-blur);
+  -webkit-backdrop-filter: var(--cg-blur);
+  border-radius: var(--cg-radius-lg);
+  border: 1px solid var(--cg-border);
+  box-shadow: var(--cg-shadow), var(--cg-shadow-inner);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s var(--cg-ease);
+}
+
+/* Shimmer sweep on hover */
+.cglass-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.55s ease;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.cglass-card:hover::after {
+  transform: translateX(120%);
+}
+
+.cglass-card:hover {
+  transform: translateY(-8px) scale(1.025);
+  background: var(--cg-surface-hover);
+  border-color: var(--cg-border-gold);
+  box-shadow: var(--cg-shadow-lift), var(--cg-shadow-inner);
+}
+
+/* Top lightning edge on card */
+.cglass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--cg-gold-light) 30%,
+      var(--cg-lightning) 50%,
+      var(--cg-gold-light) 70%,
+      transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 2px 2px 0 0;
+}
+
+.cglass-card:hover::before {
+  opacity: 1;
+}
+
+/* ── Navbar ─────────────────────────────────────────────── */
+.navbar {
+  background: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: var(--cg-blur) !important;
+  -webkit-backdrop-filter: var(--cg-blur) !important;
+  border-bottom: 1px solid var(--cg-border) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), inset 0 -1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn {
+  border-radius: 100px !important;
+  padding: 14px 32px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  transition: all 0.3s var(--cg-ease) !important;
+}
+
+.btn-lg {
+  padding: 18px 44px !important;
+  font-size: 1.15rem !important;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--cg-gold) 0%, var(--cg-gold-light) 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 10px 25px rgba(152, 126, 93, 0.35) !important;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.03) !important;
+  box-shadow: 0 15px 35px rgba(152, 126, 93, 0.45) !important;
+  filter: brightness(1.05) !important;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(152, 126, 93, 0.25) !important;
+  color: var(--cg-gold) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(-2px) !important;
+  border-color: var(--cg-gold) !important;
+}
+
+/* ── Form Inputs ─────────────────────────────────────────── */
+.form-input,
+.form-select,
+.form-textarea {
+  background: rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+  color: var(--cg-text) !important;
+  transition: all 0.22s var(--cg-ease2) !important;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--cg-border-gold) !important;
+  background: rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 3px rgba(152, 126, 93, 0.15),
+    0 2px 8px rgba(152, 126, 93, 0.1) !important;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--cg-text-muted) !important;
+}
+
+/* ── Data Tables ─────────────────────────────────────────── */
+.table-wrapper {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: var(--cg-blur) !important;
+  -webkit-backdrop-filter: var(--cg-blur) !important;
+  border: 1px solid var(--cg-border) !important;
+  box-shadow: var(--cg-shadow) !important;
+}
+
+.data-table thead {
+  background: rgba(152, 126, 93, 0.08) !important;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(152, 126, 93, 0.06) !important;
+}
+
+/* ── Modal ───────────────────────────────────────────────── */
+.modal {
+  background: var(--cg-surface-strong) !important;
+  backdrop-filter: var(--cg-blur-heavy) !important;
+  -webkit-backdrop-filter: var(--cg-blur-heavy) !important;
+  border: 1px solid var(--cg-border) !important;
+  box-shadow: var(--cg-shadow-lift), var(--cg-shadow-inner) !important;
+}
+
+/* ── Dept Cards (view-attendance) ───────────────────────── */
+.dept-card {
+  background: var(--cg-surface) !important;
+  backdrop-filter: var(--cg-blur) !important;
+  -webkit-backdrop-filter: var(--cg-blur) !important;
+  border: 1px solid var(--cg-border) !important;
+  border-radius: var(--cg-radius-xl) !important;
+  box-shadow: var(--cg-shadow), var(--cg-shadow-inner) !important;
+  overflow: hidden;
+}
+
+.dept-header:hover {
+  background: rgba(152, 126, 93, 0.07) !important;
+}
+
+/* ── Filter row ──────────────────────────────────────────── */
+.filters-row {
+  background: var(--cg-surface) !important;
+  backdrop-filter: var(--cg-blur) !important;
+  -webkit-backdrop-filter: var(--cg-blur) !important;
+  border: 1px solid var(--cg-border) !important;
+  border-radius: var(--cg-radius-lg) !important;
+  box-shadow: var(--cg-shadow), var(--cg-shadow-inner) !important;
+  padding: 20px 24px !important;
+  margin-bottom: 28px !important;
+}
+
+/* ── Dashboard class-card-big ───────────────────────────── */
+.class-card-big,
+.glass-card-interactive {
+  background: var(--cg-surface) !important;
+  backdrop-filter: var(--cg-blur) !important;
+  -webkit-backdrop-filter: var(--cg-blur) !important;
+  border: 1px solid var(--cg-border) !important;
+  border-radius: var(--cg-radius-lg) !important;
+  box-shadow: var(--cg-shadow), var(--cg-shadow-inner) !important;
+  transition: all 0.32s var(--cg-ease) !important;
+  overflow: hidden;
+}
+
+.class-card-big:hover,
+.glass-card-interactive:hover {
+  transform: translateY(-8px) scale(1.025) !important;
+  background: var(--cg-surface-hover) !important;
+  border-color: var(--cg-border-gold) !important;
+  box-shadow: var(--cg-shadow-lift), var(--cg-shadow-inner) !important;
+}
+
+/* ── Auth Card ───────────────────────────────────────────── */
+.auth-card {
+  background: var(--cg-surface-strong) !important;
+  backdrop-filter: var(--cg-blur-heavy) !important;
+  -webkit-backdrop-filter: var(--cg-blur-heavy) !important;
+  border: 1px solid var(--cg-border) !important;
+  border-radius: var(--cg-radius-xl) !important;
+  box-shadow: var(--cg-shadow-lift), var(--cg-shadow-inner) !important;
+}
+
+/* ── General .card overrides ─────────────────────────────── */
+.card {
+  background: var(--cg-surface) !important;
+  backdrop-filter: var(--cg-blur) !important;
+  -webkit-backdrop-filter: var(--cg-blur) !important;
+  border: 1px solid var(--cg-border) !important;
+  box-shadow: var(--cg-shadow), var(--cg-shadow-inner) !important;
+  transition: all 0.32s var(--cg-ease2) !important;
+}
+
+.card:hover,
+.card-clickable:hover {
+  transform: translateY(-5px) !important;
+  background: var(--cg-surface-hover) !important;
+  border-color: var(--cg-border-gold) !important;
+  box-shadow: var(--cg-shadow-lift), var(--cg-shadow-inner) !important;
+}
+
+/* ── Sections headers ────────────────────────────────────── */
+.section-header h2 {
+  color: var(--cg-text) !important;
+  font-size: 2.2rem !important;
+}
+
+.section-header p {
+  color: var(--cg-text-muted) !important;
+  font-size: 1rem !important;
+}
+
+/* ── Hero Overrides ──────────────────────────────────────── */
+.hero-title {
+  font-size: clamp(2.8rem, 8vw, 5rem) !important;
+  line-height: 1.05 !important;
+  margin-bottom: 24px !important;
+  color: #1A1A1A !important;
+  font-weight: 850 !important;
+}
+
+.hero-title .highlight {
+  color: var(--cg-gold) !important;
+  display: block; /* Ensure it drops to new line like in image */
+}
+
+.hero-description {
+  font-size: clamp(1rem, 2vw, 1.15rem) !important;
+  max-width: 640px !important;
+  margin: 0 auto 40px !important;
+  line-height: 1.6 !important;
+  color: var(--cg-text-muted) !important;
+  font-weight: 400 !important;
+}
+
+.nav-links a {
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.01em !important;
+}
+
+.nav-brand {
+  font-weight: 800 !important;
+  font-size: 1.4rem !important;
+  letter-spacing: -0.01em !important;
+}
+
+.hero-scroll {
+  font-size: 0.72rem !important;
+  letter-spacing: 0.25em !important;
+  text-transform: uppercase !important;
+  font-weight: 600 !important;
+  color: var(--cg-text-muted) !important;
+  opacity: 0.7 !important;
+}
+
+.hero-scroll svg {
+  margin-top: 8px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* ── Scrollbar to match glass theme ─────────────────────── */
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--cg-gold-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cg-gold);
+}
+
+/* ── File upload area ────────────────────────────────────── */
+.file-upload-area {
+  background: var(--cg-surface) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 2px dashed var(--cg-border-gold) !important;
+  transition: all 0.25s ease !important;
+}
+
+.file-upload-area:hover {
+  background: var(--cg-surface-hover) !important;
+  border-color: var(--cg-gold) !important;
+}
+
+/* ── Feature Cards (index) ───────────────────────────────── */
+.feature-card {
+  background: var(--cg-surface) !important;
+  backdrop-filter: var(--cg-blur) !important;
+  -webkit-backdrop-filter: var(--cg-blur) !important;
+  border: 1px solid var(--cg-border) !important;
+  box-shadow: var(--cg-shadow) !important;
+}
+
+/* ── Fade-in animations ──────────────────────────────────── */
+@keyframes cg-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: cg-fade-up 0.55s var(--cg-ease2) both !important;
+}
+
+.stagger-1 {
+  animation-delay: 0.05s !important;
+}
+
+.stagger-2 {
+  animation-delay: 0.12s !important;
+}
+
+.stagger-3 {
+  animation-delay: 0.20s !important;
+}
+
+.stagger-4 {
+  animation-delay: 0.28s !important;
+}
+
+.stagger-5 {
+  animation-delay: 0.36s !important;
+}
+
+/* ── Footer Overrides ────────────────────────────────────── */
+.landing-footer {
+  border-top: 1px solid var(--cg-border) !important;
+  padding: 32px 0 !important;
+}
+
+.landing-footer p {
+  font-size: 0.78rem !important;
+  color: var(--cg-text-muted) !important;
+  opacity: 0.8 !important;
+}
+
+.landing-footer a {
+  color: var(--cg-gold) !important;
+  font-weight: 600 !important;
+}

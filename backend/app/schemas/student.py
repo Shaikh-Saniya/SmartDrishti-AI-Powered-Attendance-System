@@ -13,6 +13,7 @@ class StudentCreate(BaseModel):
     roll_number: str = Field(..., min_length=1, max_length=50)
     name: str = Field(..., min_length=1, max_length=255)
     class_name: str = Field(..., min_length=1, max_length=50)
+    year: str | None = Field(default=None, max_length=50)
     department: str | None = Field(default=None, max_length=100)
     email: str | None = Field(default=None, max_length=255)
     phone: str | None = Field(default=None, max_length=20)
@@ -23,6 +24,7 @@ class StudentCreate(BaseModel):
         roll_number: str = Form(...),
         name: str = Form(...),
         class_name: str = Form(...),
+        year: str | None = Form(None),
         department: str | None = Form(None),
         email: str | None = Form(None),
         phone: str | None = Form(None),
@@ -31,6 +33,7 @@ class StudentCreate(BaseModel):
             roll_number=roll_number,
             name=name,
             class_name=class_name,
+            year=year,
             department=department,
             email=email,
             phone=phone,
@@ -44,6 +47,7 @@ class StudentUpdate(BaseModel):
 
     name: str | None = Field(default=None, max_length=255)
     class_name: str | None = Field(default=None, max_length=50)
+    year: str | None = Field(default=None, max_length=50)
     department: str | None = Field(default=None, max_length=100)
     email: str | None = Field(default=None, max_length=255)
     phone: str | None = Field(default=None, max_length=20)
@@ -71,6 +75,7 @@ class StudentResponse(BaseModel):
     roll_number: str
     name: str
     class_: str
+    year: str | None
     department: str | None
     email: str | None
     phone: str | None
@@ -89,5 +94,6 @@ class StudentListResponse(BaseModel):
     roll_number: str
     name: str
     class_: str
+    year: str | None
     department: str | None
     is_active: bool

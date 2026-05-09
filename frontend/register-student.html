@@ -4,9 +4,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register Student — Drishti</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Register Student — SmartDrishti</title>
   <meta name="description" content="Register a new student with face image for the attendance system." />
   <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="css/cglass.css" />
+  <style>
+    .year-filter-btn {
+      transition: all 0.2s;
+      background-color: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      color: #000000;
+    }
+
+    .year-filter-btn:hover {
+      background-color: #e5e7eb;
+    }
+
+    .year-filter-btn.active {
+      background: var(--chamoisee, #7EACB5);
+      color: #fff;
+      border-color: var(--chamoisee, #7EACB5);
+    }
+
+    .camera-text {
+      color: var(--chamoisee);
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .camera-container {
+      position: relative;
+      background: #000;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+
+    #camera-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
 </head>
 
 <body>
@@ -24,7 +69,7 @@
           stroke-linecap="round" />
         <circle cx="16" cy="12" r="2" fill="currentColor" />
       </svg>
-      Drishti
+      SmartDrishti
     </a>
     <div class="nav-links" id="nav-links">
       <a href="dashboard.html">Dashboard</a>
@@ -78,7 +123,28 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="department">Department</label>
-                <input class="form-input" type="text" id="department" placeholder="Enter Department:" />
+                <select class="form-select" id="department">
+                  <option value="">Select Department</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Civil">Civil</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Year *</label>
+              <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-ghost btn-sm year-filter-btn" id="btn-year-FY"
+                  onclick="setYear('FY')">FY</button>
+                <button type="button" class="btn btn-ghost btn-sm year-filter-btn" id="btn-year-SY"
+                  onclick="setYear('SY')">SY</button>
+                <button type="button" class="btn btn-ghost btn-sm year-filter-btn" id="btn-year-TY"
+                  onclick="setYear('TY')">TY</button>
+                <button type="button" class="btn btn-ghost btn-sm year-filter-btn" id="btn-year-LY"
+                  onclick="setYear('LY')">LY</button>
+                <input type="hidden" id="student_year" value="" />
               </div>
             </div>
 
@@ -103,7 +169,8 @@
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" x2="12" y1="3" y2="15" />
                 </svg>
-                <p>Drag and drop an image here, or <span class="browse-text">browse</span></p>
+                <p>Drag and drop an image here, <span class="browse-text">browse</span>, or <span class="camera-text"
+                    id="open-camera">use camera</span></p>
                 <input type="file" id="student-image" accept="image/jpeg,image/png,image/jpg" hidden />
               </div>
               <p class="form-hint">Upload a clear, front-facing photo. Supported: JPG, PNG (max 10 MB)</p>
@@ -126,14 +193,103 @@
     </div>
   </div>
 
+  <!-- Camera Modal -->
+  <div class="modal-overlay" id="camera-modal">
+    <div class="modal" style="max-width: 640px;">
+      <div class="modal-header">
+        <h3>Capture Photo</h3>
+        <button type="button" class="modal-close">&times;</button>
+      </div>
+      <div class="camera-container">
+        <video id="camera-video" autoplay playsinline></video>
+        <canvas id="camera-canvas" style="display: none;"></canvas>
+      </div>
+      <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+        <button type="button" class="btn btn-secondary" id="close-camera-btn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="capture-photo-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M14.5 2H9.5L7 4.5H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-10a2 2 0 0 0-2-2h-3L14.5 2z" />
+            <circle cx="12" cy="13" r="3" />
+          </svg>
+          Capture Photo
+        </button>
+      </div>
+    </div>
+  </div>
+
 
   <script src="scripts/api.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+  <script src="scripts/cglass-bg.js"></script>
   <script>
     if (!requireAuth()) { /* redirect */ }
 
     // File upload setup
     initFileUpload('upload-area', 'student-image', 'image-preview');
+
+    // Camera Logic
+    const cameraModal = document.getElementById('camera-modal');
+    const openCameraBtn = document.getElementById('open-camera');
+    const closeCameraBtn = document.getElementById('close-camera-btn');
+    const captureBtn = document.getElementById('capture-photo-btn');
+    const video = document.getElementById('camera-video');
+    const canvas = document.getElementById('camera-canvas');
+    const imageInput = document.getElementById('student-image');
+    const imagePreview = document.getElementById('image-preview');
+    let stream = null;
+
+    openCameraBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+        video.srcObject = stream;
+        cameraModal.classList.add('active');
+      } catch (err) {
+        showToast('Could not access camera: ' + err.message, 'error');
+      }
+    });
+
+    const stopCamera = () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+      cameraModal.classList.remove('active');
+    };
+
+    closeCameraBtn.addEventListener('click', stopCamera);
+    document.querySelector('#camera-modal .modal-close').addEventListener('click', stopCamera);
+
+    captureBtn.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      canvas.toBlob((blob) => {
+        const file = new File([blob], "captured-face.jpg", { type: "image/jpeg" });
+
+        // Use DataTransfer to set files on input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        imageInput.files = dataTransfer.files;
+
+        // Update preview
+        imagePreview.src = URL.createObjectURL(blob);
+        imagePreview.classList.add('active');
+
+        stopCamera();
+        showToast('Photo captured!', 'success');
+      }, 'image/jpeg', 0.9);
+    });
+
+    function setYear(year) {
+      document.querySelectorAll('.year-filter-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('student_year').value = year;
+      document.getElementById(`btn-year-${year}`).classList.add('active');
+    }
 
     // Form submit
     document.getElementById('register-form').addEventListener('submit', async (e) => {
@@ -143,6 +299,11 @@
       const name = document.getElementById('name').value.trim();
       const roll_number = document.getElementById('roll_number').value.trim();
       const class_name = document.getElementById('class_name').value.trim();
+      const year = document.getElementById('student_year').value || null;
+      if (!year) {
+        showToast('Please select a Year', 'warning');
+        return;
+      }
       const department = document.getElementById('department').value.trim();
       const email = document.getElementById('email').value.trim();
       const phone = document.getElementById('phone').value.trim();
@@ -163,6 +324,7 @@
           name,
           roll_number,
           class_name,
+          year,
           department: department || null,
           email: email || null,
           phone: phone || null,

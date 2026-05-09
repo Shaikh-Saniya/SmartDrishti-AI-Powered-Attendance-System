@@ -141,7 +141,7 @@ function initFileUpload(areaId, inputId, previewId) {
     handleFiles(files);
   });
 
-  input.addEventListener('change', function() {
+  input.addEventListener('change', function () {
     handleFiles(this.files);
   });
 
@@ -158,7 +158,7 @@ function initFileUpload(areaId, inputId, previewId) {
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Add toast styles if not present
   if (!document.querySelector('#toast-styles')) {
     const style = document.createElement('style');
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
       navLinks.classList.toggle('open');
     });
   }
-  
+
   // Bind modal close buttons
   document.querySelectorAll('.modal-close').forEach(btn => {
     btn.addEventListener('click', (e) => {

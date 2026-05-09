@@ -1,0 +1,154 @@
+/* 
+  SmartDrishti - Liquid Glass Theme
+  Inspired by Apple visionOS & iOS 18 Design Language
+*/
+
+:root {
+  /* Colors - Liquid Glass Palette */
+  --lg-primary: rgba(126, 172, 181, 0.85);
+  --lg-secondary: rgba(255, 255, 255, 0.1);
+  --lg-text: rgba(255, 255, 255, 0.95);
+  --lg-text-muted: rgba(255, 255, 255, 0.55);
+  --lg-danger: rgba(220, 53, 69, 0.8);
+  --lg-success: rgba(40, 167, 69, 0.8);
+  
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-blur: blur(25px) saturate(180%);
+  --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  
+  /* Radii */
+  --radius-xl: 30px;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+html, body {
+  background: #050505 !important;
+  color: var(--lg-text) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(126, 172, 181, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(152, 126, 93, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(10, 10, 10, 1) 0%, transparent 100%);
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Ambient Animated Glows */
+.ambient-glow-lg {
+  position: fixed;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(circle, rgba(126, 172, 181, 0.08) 0%, transparent 70%);
+  filter: blur(100px);
+  z-index: -1;
+  pointer-events: none;
+  animation: drift 20s infinite alternate ease-in-out;
+}
+
+@keyframes drift {
+  from { transform: translate(-20%, -20%) rotate(0deg); }
+  to { transform: translate(20%, 20%) rotate(360deg); }
+}
+
+/* ── Glass Components ────────────────────────────────────── */
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.glass-card-interactive {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-8px) scale(1.02);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--lg-primary);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.lg-btn {
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.lg-btn-primary {
+  background: var(--lg-primary);
+  border: none;
+}
+
+.lg-btn:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.15);
+}
+
+.lg-btn-primary:hover {
+  box-shadow: 0 0 20px rgba(126, 172, 181, 0.4);
+}
+
+/* ── Navbar Override ────────────────────────────────────── */
+.navbar {
+  background: rgba(10, 10, 10, 0.6) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  box-shadow: none !important;
+}
+
+.navbar.scrolled {
+  background: rgba(10, 10, 10, 0.8) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.nav-links a {
+  color: var(--lg-text-muted) !important;
+}
+
+.nav-links a.active, .nav-links a:hover {
+  color: #fff !important;
+}
+
+.nav-brand {
+  color: #fff !important;
+}
